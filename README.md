@@ -26,3 +26,8 @@ Currently the repository is only housing the raw advanced data file retrieved fr
 - Use Streamlit's session data to move player selections between pages.
 - Rely more on Plotly to create interactive vizzes, instead of using mplsoccer for static vizzes.
   - Gotta create these vizzes without the help of a package written specifically for football/soccer vizzes...somehow. Could be potential future work to create an mplsoccer equivalent, but for Plotly _(will need a lot of work tho)_.
+
+## References
+
+- https://github.com/lukarh/assists-tracking-dash-app
+- https://github.com/minimav/plotly-football-pitch
