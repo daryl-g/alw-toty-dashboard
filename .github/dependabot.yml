@@ -6,6 +6,7 @@ updates:
   - package-ecosystem: "pip"
     # Look for `package.json` and `lock` files in the `root` directory
     directory: "/"
-    # Check the pip registry for updates every week
+    # Check the pip registry for updates every monthly (cause weekly is so annoying)
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+
