@@ -1,10 +1,11 @@
-# A-League Women TOTS Dashboard
+# A-League Women Recruitment Dashboard
 
 ## Overview
 
-Repo for the Streamlit dashboard for the 2024-25 A-League Women Team of the Season.
+A football recruitment, Streamlit-hosted dashboard using Opta/FBRef's A-League Women data from the 2024-25 season.
 
-Currently the repository is only housing the raw advanced data file retrieved from FBRef.
+- Inspired by a combination of Football Manager's Squad Planner and Data Hub screens.
+- The name of this repo (`alw-toty-dashboard`) hints at the precessor idea to the current one, which was a dashboard for the 2024-25 Team of the Season.
 
 ## Information about the data
 
