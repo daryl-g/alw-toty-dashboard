@@ -1,6 +1,7 @@
 ﻿Player,Main Pos,Other Pos,Squad
 Amelia Abbott,RB,CB,Wellington Phoenix
 Ella Abdul Massih,LW,AM,Perth Glory
+Isabella Accardo,CM,"DM,AM",Melb City
 Claire Adams,LM,,Newcastle Jets
 Josie Allan,RW,CF,Newcastle Jets
 Lauren Allan,RM,"RWB,RW,AM",Newcastle Jets
@@ -15,6 +16,7 @@ Amelia Bennett,RB,"CB,LB,LM,RM,RW",W Sydney
 Tegan Bertolissio,CB,"LB,RB,CM",Canberra Utd
 Jasmine Black,GK,GK,Sydney FC
 Chelsea Blissett,CB,LB,Brisbane Roar
+Ally Boertje,GK,,Newcastle Jets
 Lourdes Bosch,RW,"LM,RM,CF",Melb City
 Katie Bowler,LW,,Adelaide Utd
 Jaya Bowman,AM,,Canberra Utd
@@ -26,8 +28,10 @@ Kelli Brown,RW,CF,Perth Glory
 Faye Bryson,LB,"RB,DM,CM,RW",Sydney FC
 Ella Buchanan,CB,LB,W Sydney
 Claudia Bunge,CB,,Melb Victory
+Georgia Candy,GK,,Melb Victory
+Chloe Carmichael,GK,,Central Coast Mariners
 Holly Caspers,CF,"AM,LW",W Sydney
-Maddie Caspers,CM,"AM,LW",Sydney FC
+Madeleine Caspers,CM,"AM,LW",Sydney FC
 Amelia Cassar,CF,,W Sydney
 Georgia Cassidy,CM,DM,Perth Glory
 Alana Cerne,CB,CB,Western United
@@ -85,6 +89,7 @@ Isabel Gomez,CM,"DM,LM",Central Coast Mariners
 Lara Gooch,RW,,Newcastle Jets
 Bethany Gordon,CM,"DM,LM,RM",Canberra Utd
 Miley Grigg,RW,"RW,CF",Adelaide Utd
+Annalee Grove,GK,,Adelaide Utd
 Sasha Grove,LB,RB,Western United
 Aimee Hall,GK,GK,W Sydney
 Milan Hammond,CF,,Newcastle Jets
@@ -94,7 +99,7 @@ Amy Harrison,CB,,W Sydney
 Kathryn Harvey,CF,"LM,RM",Melb City
 Mackenzie Hawkesby,CM,"AM,CF",Sydney FC
 Momo Hayashi,DM,"CB,CM",Brisbane Roar
-Paige Hayward,LB,,W Sydney
+Paige Haywood,LB,,W Sydney
 Erin Healy,RW,"CM,AM,LW,CF",Adelaide Utd
 Mariel Hecher,AM,"LW,RW",Brisbane Roar
 Bryleeh Henry,RM,"LM,CF",Melb City
@@ -139,7 +144,7 @@ Grace Kuilamu,CF,CF,Brisbane Roar
 Rebecca Lake,CB,,Wellington Phoenix
 Tanika Lala,CF,,Perth Glory
 Sarah Langman,GK,GK,Central Coast Mariners
-Abbey Lemon,LB,,Sydney FC
+Abbey Lemon,LB,CF,Sydney FC
 Tamar Levin,AM,RW,Brisbane Roar
 Chloe Lincoln,GK,GK,Western United
 Ella Lincoln,CF,"LW,RW",Perth Glory
@@ -180,9 +185,10 @@ Tianah Miro,CF,,Canberra Utd
 Sarah Morgan,CM,DM,Adelaide Utd
 Tanaye Morris,CF,,Brisbane Roar
 Kayla Morrison,CB,,Melb Victory
+Teresa Morrissey,GK,,Central Coast Mariners
 Meleri Mullan,LW,,Adelaide Utd
 Alana Murphy,CM,DM,Melb Victory
-Emilia Murray,RM,"LW,CF",Melb City
+Emilia Makris,RM,"LW,CF",Melb City
 Holly Murray,CB,,Canberra Utd
 Jessika Nash,CB,,Central Coast Mariners
 Ruby Nathan,CF,,Canberra Utd
@@ -196,6 +202,7 @@ Hollie Palmer,CM,,Perth Glory
 Chrissy Panagaris,CF,"CM,LW,RW",Adelaide Utd
 Jade Pennock,RW,"LW,CF",Central Coast Mariners
 Susan Phonsongkham,LW,,Perth Glory
+Natalie Picak,GK,,Western United
 Laura Pickett,RB,,Melb Victory
 Rhianna Pollicina,CF,CM,Melb City
 Evdokiya Popadinova,CF,,Brisbane Roar
@@ -225,6 +232,7 @@ Jessica Seaman,CB,,Central Coast Mariners
 Keely Segavcic,GK,GK,W Sydney
 Olivia Sekany,GK,GK,Brisbane Roar
 Lillian Skelly,RW,RWB,Canberra Utd
+Jessica Skinner,GK,,Perth Glory
 Mariana Speckmaier,LW,"LM,RM,CF",Melb City
 Anika Stajcic,CB,,W Sydney
 Mary Stanic-Floody,CM,"RM,AM,CF",Canberra Utd
@@ -238,6 +246,7 @@ Adriana Taranto,LW,RW,Western United
 Melissa Taranto,CM,"DM,AM",Western United
 Natalie Tathem,RB,"CB,CM",Perth Glory
 Hayley Taylor-Young,CB,"LB,RB,LM",Canberra Utd
+Sienna Techera,CF,LW,Melb Victory
 Miranda Templeman,GK,GK,Perth Glory
 Naomi Thomas-Chinnama,CB,,Perth Glory
 Jordan Thompson,CB,,Sydney FC

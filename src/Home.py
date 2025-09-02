@@ -3,6 +3,15 @@
 # Imports
 import streamlit as st
 
+# Custom modules
+from styles import Styles
+from components import title_header
+from utils import display_markdown
+
+# Custom styling
+styles = Styles()
+styles.style_init()
+
 # Dashboard configs
 menu_items: dict = {
     "Get Help": "https://github.com/daryl-g/alw-toty-dashboard/issues",
@@ -18,6 +27,13 @@ st.set_page_config(
     menu_items=menu_items,
 )
 
-# Load README file
-readme = open("src/assets/title_readme.md", "r", encoding="utf-8").read()
-st.markdown(readme)
+# Set up app header
+title_header(
+    "A-League Women",
+    "Recruitment Dashboard",
+    image_path="src/assets/imgs/ALW_logo.png",
+    image_width=75,
+)
+st.markdown("---")
+
+display_markdown("src/assets/texts/title_readme.md")
