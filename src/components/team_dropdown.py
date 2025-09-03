@@ -2,7 +2,7 @@
 import streamlit as st
 
 # Custom modules
-from utils import shorten_team_name
+from utils import get_team_name
 
 
 def dropdown(multiselect: bool) -> str | list | None:
@@ -16,7 +16,7 @@ def dropdown(multiselect: bool) -> str | list | None:
         (str | list | None): Selected team(s) from the dropdown. None if no selection is made.
     """
 
-    team_options: list = list(shorten_team_name("all").keys())
+    team_options: list = [name[1] for name in get_team_name("all").values()]
     team_options.sort()
 
     if multiselect:
@@ -31,7 +31,7 @@ def dropdown(multiselect: bool) -> str | list | None:
         selected_team: str | None = st.selectbox(
             label="Select team",
             options=team_options,
-            index=None,
+            index=0,
             placeholder="Select a team...",
         )
         return selected_team

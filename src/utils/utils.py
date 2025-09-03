@@ -3,36 +3,48 @@
 # Imports
 import pandas as pd
 import streamlit as st
+import matplotlib.font_manager as fm  # Import fonts
+
+from PIL import Image
 
 
-def shorten_team_name(name: str) -> str | dict:
+def get_team_name(name: str, mode: str = "short") -> str | dict:
     """
     Get the three-letter abbreviation from FBRef's A-League team name.
 
     Args:
-        name (str): Opta/FBRef's name of the A-League team.
+        name (str): Opta/FBRef's name of the A-League team. Use 'all' to get all team names.
+        mode (str): 'short' for abbreviated team name, 'full' for full, displayable team name.
 
     Returns:
         (str | dict): Three-letter abbreviation of the team name. Mapping of all team names to their abbreviations if `all` is passed.
     """
+    if mode not in ["short", "full"]:
+        raise ValueError(
+            "Unknown text mode. Please choose between 'short' for abbreviated names and 'full' for full team names."
+        )
+
     team_name_map: dict = {
-        "Adelaide Utd": "ADL",
-        "Brisbane Roar": "BRR",
-        "Canberra Utd": "CAN",
-        "Central Coast Mariners": "CCM",
-        "Melb City": "MCY",
-        "Melb Victory": "VIC",
-        "Newcastle Jets": "NEW",
-        "Perth Glory": "PER",
-        "Sydney FC": "SYD",
-        "Wellington Phoenix": "WEL",
-        "Western United": "WUN",
-        "W Sydney": "WSW",
+        "Adelaide Utd": ("ADL", "Adelaide United"),
+        "Brisbane Roar": ("BRR", "Brisbane Roar"),
+        "Canberra Utd": ("CAN", "Canberra United"),
+        "Central Coast Mariners": ("CCM", "Central Coast Mariners"),
+        "Melb City": ("MCY", "Melbourne City"),
+        "Melb Victory": ("VIC", "Melbourne Victory"),
+        "Newcastle Jets": ("NEW", "Newcastle Jets"),
+        "Perth Glory": ("PER", "Perth Glory"),
+        "Sydney FC": ("SYD", "Sydney FC"),
+        "Wellington Phoenix": ("WEL", "Wellington Phoenix"),
+        "Western United": ("WUN", "Western United"),
+        "W Sydney": ("WSW", "Western Sydney Wanderers"),
     }
 
     if name is None:
         raise ValueError("Team name cannot be None!")
-    elif name not in team_name_map and name != "all":
+    elif (
+        (name not in team_name_map.keys())
+        and (name not in [name[1] for name in team_name_map.values()])
+    ) and (name != "all"):
         st.warning(
             f"Team name '{name}' not found in the mapping. Returning original name."
         )
@@ -40,7 +52,19 @@ def shorten_team_name(name: str) -> str | dict:
     elif name == "all":
         return team_name_map
     else:
-        return team_name_map.get(name, name)
+        if name in team_name_map.keys():
+            if mode == "short":
+                return team_name_map.get(name, name)[0]
+            else:
+                return team_name_map.get(name, name)[1]
+        else:
+            full_names = [name[1] for name in team_name_map.values()]
+            short_names = [name[0] for name in team_name_map.values()]
+            opta_names = list(team_name_map.keys())
+
+            for i in range(len(full_names)):
+                if name == full_names[i]:
+                    return short_names[i] if mode == "short" else opta_names[i]
 
 
 def load_csv(
@@ -86,3 +110,73 @@ def display_markdown(file_path: str):
 
     # Display the content in the app
     st.markdown(content)
+
+
+def import_fonts(
+    weight: str = "regular",
+) -> fm.FontProperties | list[fm.FontProperties, fm.FontProperties, fm.FontProperties]:
+    """
+    This function imports the Roboto Regular and/or Roboto Bold fonts from the same folder as this code.
+
+    Args:
+        weight (str): Single font weight ('regular', 'light', 'bold'). Use 'all' to get all fonts.
+
+    Returns:
+        Single font properties or tuple containing the Roboto Regular and Roboto Bold fonts.
+    """
+    if weight.lower() not in ["regular", "light", "bold", "all"]:
+        raise ValueError(
+            "Unknown font weight. Please choose from 'regular', 'light', 'bold', or 'all' to get all fonts."
+        )
+
+    # Import the fonts from the same folder as this code
+    robotoRegular = fm.FontProperties(fname="src/assets/fonts/Roboto-Regular.ttf")
+    robotoLight = fm.FontProperties(fname="src/assets/fonts/Roboto-Light.ttf")
+    robotoBold = fm.FontProperties(fname="src/assets/fonts/Roboto-Bold.ttf")
+
+    if weight == "all":
+        return robotoRegular, robotoLight, robotoBold
+    elif weight == "regular":
+        return robotoRegular
+    elif weight == "light":
+        return robotoLight
+    elif weight == "bold":
+        return robotoBold
+    else:
+        raise ValueError(
+            "Unknown font weight. Please choose from 'regular', 'light', 'bold', or 'all' to get all fonts."
+        )
+
+
+def load_team_logo(team: str):
+    """
+    Map team name with the locally-stored team logo.
+
+    Args:
+        team (str): Opta/FBRef or full, displayed team name (aka 'Melb City' or 'Melbourne City').
+
+    Returns:
+        (PIL.Image.ImageFile): Image file loaded by PIL.
+    """
+    folder_path = "src/assets/imgs/"
+    file_extension = ".png"
+
+    team_logo_map: dict = {
+        "Adelaide Utd": folder_path + "Adelaide_United" + file_extension,
+        "Brisbane Roar": folder_path + "Brisbane_Roar" + file_extension,
+        "Canberra Utd": folder_path + "Canberra_United" + file_extension,
+        "Central Coast Mariners": folder_path + "CC_Mariners" + file_extension,
+        "Melb City": folder_path + "Melb_City" + file_extension,
+        "Melb Victory": folder_path + "Melb_Victory" + file_extension,
+        "Newcastle Jets": folder_path + "Newcastle_Jets" + file_extension,
+        "Perth Glory": folder_path + "Perth_Glory" + file_extension,
+        "Sydney FC": folder_path + "Sydney" + file_extension,
+        "Wellington Phoenix": folder_path + "Wellington_Phoenix" + file_extension,
+        "Western United": folder_path + "Western_United" + file_extension,
+        "W Sydney": folder_path + "WSydney_Wanderers" + file_extension,
+    }
+
+    if team not in team_logo_map.keys():
+        team = get_team_name(team, mode="full")
+
+    return Image.open(team_logo_map.get(team, team))
