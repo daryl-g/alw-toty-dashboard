@@ -3,5 +3,12 @@
 # Imports
 import subprocess
 
+from loguru import logger
+
 if __name__ == "__main__":
-    subprocess.run(["streamlit", "run", "src/Home.py"])
+    try:
+        subprocess.run(["streamlit", "run", "src/Home.py", "--server.port", "8080"])
+    except KeyboardInterrupt:
+        logger.warning("Dashboard stopped by user.")
+    except Exception as e:
+        logger.error(f"Error starting dashboard: {e}")
