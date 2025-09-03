@@ -72,7 +72,7 @@ legend_y = 92
 ax.text(
     legend_x + 2,
     legend_y + 3,
-    "Legend",
+    "Legend (%)",
     fontsize=10,
     fontproperties=import_fonts(weight="bold"),
     color="#ffffff",
@@ -173,26 +173,41 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
 
         # Plot stacked bar chart if there are players in that position
         if not selected_pos.empty:
+            selected_pos["Total"] = (
+                selected_pos["Matches started"]
+                + selected_pos["Subs appearances"]
+                + selected_pos["Unused sub"]
+            )
+            selected_pos["Matches started (%)"] = (
+                selected_pos["Matches started"] / selected_pos["Total"] * 100
+            )
+            selected_pos["Subs appearances (%)"] = (
+                selected_pos["Subs appearances"] / selected_pos["Total"] * 100
+            )
+            selected_pos["Unused sub (%)"] = (
+                selected_pos["Unused sub"] / selected_pos["Total"] * 100
+            )
 
             # Plot stacked bar chart
             axes[position].barh(
                 y=range(len(selected_pos)),
-                width=selected_pos["Matches started"],
+                width=selected_pos["Matches started (%)"],
                 color="#ff4499",
                 height=0.7,
             )
             axes[position].barh(
                 y=range(len(selected_pos)),
-                width=selected_pos["Subs appearances"],
+                width=selected_pos["Subs appearances (%)"],
                 color="#4499ff",
-                left=selected_pos["Matches started"],
+                left=selected_pos["Matches started (%)"],
                 height=0.7,
             )
             axes[position].barh(
                 y=range(len(selected_pos)),
-                width=selected_pos["Unused sub"],
+                width=selected_pos["Unused sub (%)"],
                 color="#3d3076",
-                left=selected_pos["Matches started"] + selected_pos["Subs appearances"],
+                left=selected_pos["Matches started (%)"]
+                + selected_pos["Subs appearances (%)"],
                 height=0.7,
             )
 
@@ -214,10 +229,7 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
             ## Set axes limits and labels
             axes[position].set_xlim(
                 0,
-                selected_pos[["Matches started", "Subs appearances", "Unused sub"]]
-                .sum(axis=1)
-                .max()
-                + 5,
+                100 + 5,
             )
             axes[position].set_ylim(-0.5, len(selected_pos) - 0.5)
 

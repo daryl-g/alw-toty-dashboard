@@ -212,6 +212,10 @@ def map_player_positions(file_name: str) -> pd.DataFrame:
         file_path=folder_name + "PositionMap" + file_extension, display=False
     )
 
+    # Map positions to match data
+    position_map.loc[position_map["Main Pos"] == "LW", "Main Pos"] = "LM"
+    position_map.loc[position_map["Main Pos"] == "RW", "Main Pos"] = "RM"
+
     joined = pd.merge(
         data_file,
         position_map,
