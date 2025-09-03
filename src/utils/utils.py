@@ -24,6 +24,9 @@ def get_team_name(name: str, mode: str = "short") -> str | dict:
             "Unknown text mode. Please choose between 'short' for abbreviated names and 'full' for full team names."
         )
 
+    # Key: Opta-formatted team name
+    # Value[0]: Abbreviated team name for getting colours (I might change this later cause this was supposed to be the universal mapping for the code)
+    # Value[1]: Full team name for display purposes
     team_name_map: dict = {
         "Adelaide Utd": ("ADL", "Adelaide United"),
         "Brisbane Roar": ("BRR", "Brisbane Roar"),
@@ -41,6 +44,7 @@ def get_team_name(name: str, mode: str = "short") -> str | dict:
 
     if name is None:
         raise ValueError("Team name cannot be None!")
+    # If the input is neither an Opta-formatted team name nor the full team name
     elif (
         (name not in team_name_map.keys())
         and (name not in [name[1] for name in team_name_map.values()])
@@ -52,16 +56,21 @@ def get_team_name(name: str, mode: str = "short") -> str | dict:
     elif name == "all":
         return team_name_map
     else:
+        # If the input is an Opta-formatted team name
         if name in team_name_map.keys():
-            if mode == "short":
-                return team_name_map.get(name, name)[0]
-            else:
-                return team_name_map.get(name, name)[1]
+            return (
+                team_name_map.get(name, name)[0]
+                if mode == "short"
+                else team_name_map.get(name, name)[1]
+            )
+        # If the input is the full team name
         else:
+            # Flatten the dictionary
             full_names = [name[1] for name in team_name_map.values()]
             short_names = [name[0] for name in team_name_map.values()]
             opta_names = list(team_name_map.keys())
 
+            # Reverse look
             for i in range(len(full_names)):
                 if name == full_names[i]:
                     return short_names[i] if mode == "short" else opta_names[i]
@@ -180,3 +189,35 @@ def load_team_logo(team: str):
         team = get_team_name(team, mode="full")
 
     return Image.open(team_logo_map.get(team, team))
+
+
+def map_player_positions(file_name: str) -> pd.DataFrame:
+    """
+    Map Opta/FBRef's player data with each player's correct positions.
+
+    Args:
+        file_name (str): Name of the CSV data file without the folder path at the front and the file extension at the end.
+
+    Returns:
+        (pd.DataFrame): Loaded data with mapped positions.
+    """
+    folder_name = "data/"
+    file_extension = ".csv"
+
+    # Load the files
+    data_file = load_csv(
+        file_path=folder_name + file_name + file_extension, display=False
+    )
+    position_map = load_csv(
+        file_path=folder_name + "PositionMap" + file_extension, display=False
+    )
+
+    joined = pd.merge(
+        data_file,
+        position_map,
+        left_on=["Player", "Squad"],
+        right_on=["Player", "Squad"],
+        how="left",
+    ).drop(["Pos"], axis=1)
+
+    return joined

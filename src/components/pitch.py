@@ -1,4 +1,5 @@
 # Imports
+from pandas import DataFrame
 from mplsoccer import Pitch, VerticalPitch
 from matplotlib.axes import Axes
 
@@ -13,8 +14,9 @@ def get_positions(
     team: str,
     second_striker: bool = False,
     line: int = 5,
-    node_size: float = 1500,
-):
+    node_size: float = 500,
+    text_size: int = 8,
+) -> DataFrame:
     """
     Get positions coordinates on the pitch.
 
@@ -25,9 +27,10 @@ def get_positions(
         second_striker (bool, optional): Whether to include the second striker position. Defaults to False.
         line (int, optional): Number of lines in the formation (4 or 5). Defaults to 4.
         node_size (float, optional): Size of the position nodes. Defaults to 1500.
+        text_size (int, optional): Font size of the position text. Defaults to 14.
 
     Returns:
-        (None): All position nodes plotted on the pitch.
+        pd.DataFrame: Coordinates of the positions on the pitch, along with position nodes being plotted.
     """
     temp_pos = pitch.get_positions(second_striker=second_striker, line=line)
 
@@ -58,6 +61,15 @@ def get_positions(
 
     positions = positions.drop(["RW"])
 
+    # Rename positions to match the data
+    positions = positions.rename(
+        index={
+            "CDM": "DM",
+            "CAM": "AM",
+            "ST": "CF",
+        }
+    )
+
     colours = get_team_colours(team=get_team_name(team, mode="short"))
 
     # Plot the position nodes on the pitch
@@ -74,7 +86,7 @@ def get_positions(
             color=colours["primary"],
             edgecolors=colours["secondary"],
             zorder=1,
-            ax=ax["pitch"],
+            ax=ax,
         )
 
         pitch.annotate(
@@ -84,7 +96,9 @@ def get_positions(
             ha="center",
             va="center",
             fontproperties=import_fonts(weight="bold"),
-            fontsize=14,
+            fontsize=text_size,
             color=colours["secondary"],
-            ax=ax["pitch"],
+            ax=ax,
         )
+
+    return positions
