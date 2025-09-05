@@ -7,7 +7,7 @@ from loguru import logger
 
 if __name__ == "__main__":
     try:
-        subprocess.run(["streamlit", "run", "src/Home.py", "--server.port", "8080"])
+        subprocess.run(["streamlit", "run", "src/index.py", "--server.port", "8080"])
     except KeyboardInterrupt:
         logger.warning("Dashboard stopped by user.")
     except Exception as e:
