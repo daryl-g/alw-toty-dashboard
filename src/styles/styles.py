@@ -21,7 +21,7 @@ class Styles:
         st.markdown
             CSS styles as a string.
         """
-        return st.markdown(
+        return st.html(
             f"""
         <style>
         
@@ -68,7 +68,6 @@ class Styles:
 
         </style>
         """,
-            unsafe_allow_html=True,
         )
 
     # Set global background and text color
