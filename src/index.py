@@ -4,7 +4,13 @@
 import streamlit as st
 
 # Custom modules
+from styles import Styles
 from components import navigation
+
+# Initialize styles
+with st.spinner("Loading page styling..."):
+    styles = Styles()
+    styles.style_init()
 
 # Setup navigation
 navigation()
@@ -17,7 +23,6 @@ menu_items: dict = {
 }
 
 st.set_page_config(
-    page_title="A-League Women Recruitment Dashboard",
     page_icon=":soccer:",
     layout="wide",
     initial_sidebar_state="auto",

@@ -14,31 +14,26 @@ from mplsoccer import Pitch, inset_axes
 from matplotlib.axes import Axes
 
 # Custom modules
-from styles import Styles, get_team_colours
-from components import title_header, dropdown, get_positions
+from styles import get_team_colours
+from components import title_header, team_dropdown, get_positions
 from utils import *
 
-# Initialize styles
-styles = Styles()
-styles.style_init()
-
 # Set up page
-st.set_page_config(
-    page_title="Squad Depth | ALW Recruitment Dashboard",
-    page_icon="⚽",
-)
 title_header(
-    "2024-25",
-    "Squad Depth",
+    "Squad Depth | ALW Recruitment Dashboard",
+    "2024-25 Squad Depth",
+    "",
     image_path="src/assets/imgs/ALW_logo.png",
     image_width=75,
 )
 display_markdown("src/assets/texts/squad_depth_desc.md")  # Page description
 
-col1, col2 = st.columns([0.5, 0.5])
+# ----------------------------------------------------------------------------------
+
+col1, col2, col3 = st.columns([0.3, 0.25, 0.35])
 with col1:
     # Dropdown
-    selected_team = dropdown(multiselect=False)
+    selected_team = team_dropdown(multiselect=False)
 with col2:
     # Sorting method
     sort_by = st.radio(
@@ -46,6 +41,17 @@ with col2:
         options=["Minutes played", "Matches started"],
         index=0,
         captions=["Who played the most minutes?", "Who started the most matches?"],
+    )
+with col3:
+    # Distribution
+    distribution = st.radio(
+        label="Display appearances in",
+        options=["Raw numbers", "Percentage"],
+        index=1,
+        captions=[
+            "How many matches did the player start/subbed on/unused?",
+            "What is the percentage of matches started/subbed on/unused by the player?",
+        ],
     )
 
 # Preparation
@@ -72,7 +78,7 @@ legend_y = 92
 ax.text(
     legend_x + 2,
     legend_y + 3,
-    "Legend (%)",
+    "Legend (%)" if distribution == "Percentage" else "Legend",
     fontsize=10,
     fontproperties=import_fonts(weight="bold"),
     color="#ffffff",
@@ -140,15 +146,17 @@ for position in positions.index:
     axes[position].set_facecolor("none")
 
 ## Load data
-playing_time: pd.DataFrame = map_player_positions(file_name="PlayingTime")
-selected_squad: pd.DataFrame = (
-    playing_time.loc[playing_time["Squad"] == get_team_name(selected_team, mode="full")]
-    .sort_values(by="Main Pos")
-    .reset_index(drop=True)
+playing_time: pd.DataFrame = map_player_positions(
+    file_name="PlayingTime", position_sort=True
 )
+selected_squad: pd.DataFrame = playing_time.loc[
+    playing_time["Squad"] == get_team_name(selected_team, mode="full")
+]
 
 ## Get team colours
 team_colours: dict = get_team_colours(team=get_team_name(selected_team, mode="short"))
+
+# ----------------------------------------------------------------------------------
 
 with st.spinner("While waiting, remember to hydrate yourself!"):
     for position in positions.index:
@@ -191,23 +199,44 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
             # Plot stacked bar chart
             axes[position].barh(
                 y=range(len(selected_pos)),
-                width=selected_pos["Matches started (%)"],
+                width=(
+                    selected_pos["Matches started (%)"]
+                    if distribution == "Percentage"
+                    else selected_pos["Matches started"]
+                ),
                 color="#ff4499",
                 height=0.7,
             )
             axes[position].barh(
                 y=range(len(selected_pos)),
-                width=selected_pos["Subs appearances (%)"],
+                width=(
+                    selected_pos["Subs appearances (%)"]
+                    if distribution == "Percentage"
+                    else selected_pos["Subs appearances"]
+                ),
                 color="#4499ff",
-                left=selected_pos["Matches started (%)"],
+                left=(
+                    selected_pos["Matches started (%)"]
+                    if distribution == "Percentage"
+                    else selected_pos["Matches started"]
+                ),
                 height=0.7,
             )
             axes[position].barh(
                 y=range(len(selected_pos)),
-                width=selected_pos["Unused sub (%)"],
+                width=(
+                    selected_pos["Unused sub (%)"]
+                    if distribution == "Percentage"
+                    else selected_pos["Unused sub"]
+                ),
                 color="#3d3076",
-                left=selected_pos["Matches started (%)"]
-                + selected_pos["Subs appearances (%)"],
+                left=(
+                    selected_pos["Matches started (%)"]
+                    + selected_pos["Subs appearances (%)"]
+                    if distribution == "Percentage"
+                    else selected_pos["Matches started"]
+                    + selected_pos["Subs appearances"]
+                ),
                 height=0.7,
             )
 
@@ -215,7 +244,7 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
             # Annotate player names on the bars
             for i in range(len(selected_pos)):
                 axes[position].text(
-                    x=0.7,
+                    x=0.7 if distribution == "Percentage" else 0.3,
                     y=i,
                     s=f"{selected_pos.loc[i, "Player"]} ({selected_pos.loc[i, "Minutes played"]} mins)",
                     ha="left",
@@ -229,7 +258,16 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
             ## Set axes limits and labels
             axes[position].set_xlim(
                 0,
-                100 + 5,
+                (
+                    100 + 5
+                    if distribution == "Percentage"
+                    else max(
+                        selected_pos["Matches started"]
+                        + selected_pos["Subs appearances"]
+                        + selected_pos["Unused sub"]
+                        + 1
+                    )
+                ),
             )
             axes[position].set_ylim(-0.5, len(selected_pos) - 0.5)
 

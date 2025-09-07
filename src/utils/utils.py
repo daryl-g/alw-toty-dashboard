@@ -191,12 +191,13 @@ def load_team_logo(team: str):
     return Image.open(team_logo_map.get(team, team))
 
 
-def map_player_positions(file_name: str) -> pd.DataFrame:
+def map_player_positions(file_name: str, position_sort: bool = False) -> pd.DataFrame:
     """
     Map Opta/FBRef's player data with each player's correct positions.
 
     Args:
         file_name (str): Name of the CSV data file without the folder path at the front and the file extension at the end.
+        position_sort (bool, optional): Sort joined DataFrame by position? Default is False.
 
     Returns:
         (pd.DataFrame): Loaded data with mapped positions.
@@ -223,5 +224,27 @@ def map_player_positions(file_name: str) -> pd.DataFrame:
         right_on=["Player", "Squad"],
         how="left",
     ).drop(["Pos"], axis=1)
+
+    if position_sort == True:
+        joined["Main Pos"] = pd.Categorical(
+            joined["Main Pos"],
+            [
+                "GK",
+                "CB",
+                "LB",
+                "LWB",
+                "RB",
+                "RWB",
+                "DM",
+                "CM",
+                "LM",
+                "LW",
+                "RM",
+                "RW",
+                "AM",
+                "CF",
+            ],
+        ).astype(str)
+        joined = joined.sort_values(by="Main Pos").reset_index(drop=True)
 
     return joined
