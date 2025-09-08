@@ -70,22 +70,54 @@ class Styles:
         """,
         )
 
-    # Set global background and text color
-    def global_bg_text(
-        self,
-        body_bg: str = "#060621",
-        body_text: str = "#ffffff",
-        p_text: str = "#ffffff",
-        main_bg: str = "#060621",
-    ) -> str:
+    # Get a dictionary of style elements
+    def get_style(self, style: str) -> dict:
         """
-        Set global background and text color.
+        Get palette colours in a dictionary.
 
         Args:
-            body_bg (str): Body background color. Default is dark blue (#060621).
-            body_text (str): Body text color. Default is white (#ffffff).
-            p_text (str): Paragraph text color. Default is white (#ffffff).
-            main_bg (str): Main container background color. Default is dark blue (#060621).
+            style (str): Which palette to return? Options are 'light', 'dark', 'tokyo'.
+
+        Returns:
+            (dict): Dictionary with colour palette elements.
+        """
+
+        if style.lower() not in ["light", "dark", "tokyo"]:
+            raise ValueError(
+                "Unknown style option. Please choose from 'light', 'dark', 'tokyo'."
+            )
+
+        if style == "light":
+            return {"bg-color": "#fafafa", "text-color": "#010101"}
+        elif style == "dark":
+            return {"bg-color": "#010101", "text-color": "#fafafa"}
+        elif style == "tokyo":
+            return {
+                "bg-color": "#060c24",
+                "primary-color": "#ff4499",
+                "secondary-color": "#4499ff",
+                "third-color": "#3d3076",
+                "text-color": "#ffffff",
+                "border-color": "#00ffff",
+                "line-color": "#004687",
+            }
+
+    # Set global background and text colour
+    def global_bg_text(
+        self,
+        body_bg: str = "#060c24",
+        body_text: str = "#ffffff",
+        p_text: str = "#ffffff",
+        main_bg: str = "#060c24",
+    ) -> str:
+        """
+        Set global background and text colour.
+
+        Args:
+            body_bg (str): Body background colour. Default is dark blue (#060621).
+            body_text (str): Body text colour. Default is white (#ffffff).
+            p_text (str): Paragraph text colour. Default is white (#ffffff).
+            main_bg (str): Main container background colour. Default is dark blue (#060621).
         """
         return """
         body {
@@ -111,7 +143,7 @@ class Styles:
     def header(self) -> str:
         return """
         header {
-            background-color: #060621 !important;  /* Header background */
+            background-color: #060c24 !important;  /* Header background */
             color: white !important;  /* Header text color */
         }
         """

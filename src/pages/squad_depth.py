@@ -14,9 +14,13 @@ from mplsoccer import Pitch, inset_axes
 from matplotlib.axes import Axes
 
 # Custom modules
-from styles import get_team_colours
+from styles import Styles, get_team_colours
 from components import title_header, team_dropdown, get_positions
 from utils import *
+
+# Get colour palette
+styles: Styles = Styles()
+palette: dict = styles.get_style(style="tokyo")
 
 # Set up page
 title_header(
@@ -56,9 +60,13 @@ with col3:
 
 # Preparation
 ## Set up pitch
-pitch = Pitch(pitch_type="opta", pitch_color="#060621", line_color="#004687")
+pitch = Pitch(
+    pitch_type="opta",
+    pitch_color=palette["bg-color"],
+    line_color=palette["line-color"],
+)
 fig, ax = pitch.draw(figsize=(10, 8))
-fig.set_facecolor("#060621")
+fig.set_facecolor(palette["bg-color"])
 
 ## Load team logo
 pitch.inset_image(
@@ -81,41 +89,41 @@ ax.text(
     "Legend (%)" if distribution == "Percentage" else "Legend",
     fontsize=10,
     fontproperties=import_fonts(weight="bold"),
-    color="#ffffff",
+    color=palette["text-color"],
     ha="left",
     va="bottom",
 )
 ### Legend props
-ax.scatter(legend_x, legend_y, marker="s", s=100, color="#ff4499")
+ax.scatter(legend_x, legend_y, marker="s", s=100, color=palette["primary-color"])
 ax.text(
     legend_x + 1.5,
     legend_y - 1.5,
     "Matches started",
     fontsize=10,
     fontproperties=import_fonts(weight="bold"),
-    color="#ffffff",
+    color=palette["text-color"],
     ha="left",
     va="bottom",
 )
-ax.scatter(legend_x, legend_y - 4, marker="s", s=100, color="#4499ff")
+ax.scatter(legend_x, legend_y - 4, marker="s", s=100, color=palette["secondary-color"])
 ax.text(
     legend_x + 1.5,
     legend_y - 5.5,
     "Subs appearances",
     fontsize=10,
     fontproperties=import_fonts(weight="bold"),
-    color="#ffffff",
+    color=palette["text-color"],
     ha="left",
     va="bottom",
 )
-ax.scatter(legend_x, legend_y - 8, marker="s", s=100, color="#3d3076")
+ax.scatter(legend_x, legend_y - 8, marker="s", s=100, color=palette["third-color"])
 ax.text(
     legend_x + 1.5,
     legend_y - 9.5,
     "Unused subs",
     fontsize=10,
     fontproperties=import_fonts(weight="bold"),
-    color="#ffffff",
+    color=palette["text-color"],
     ha="left",
     va="bottom",
 )
@@ -204,7 +212,7 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
                     if distribution == "Percentage"
                     else selected_pos["Matches started"]
                 ),
-                color="#ff4499",
+                color=palette["primary-color"],
                 height=0.7,
             )
             axes[position].barh(
@@ -214,7 +222,7 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
                     if distribution == "Percentage"
                     else selected_pos["Subs appearances"]
                 ),
-                color="#4499ff",
+                color=palette["secondary-color"],
                 left=(
                     selected_pos["Matches started (%)"]
                     if distribution == "Percentage"
@@ -229,7 +237,7 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
                     if distribution == "Percentage"
                     else selected_pos["Unused sub"]
                 ),
-                color="#3d3076",
+                color=palette["third-color"],
                 left=(
                     selected_pos["Matches started (%)"]
                     + selected_pos["Subs appearances (%)"]
@@ -250,7 +258,7 @@ with st.spinner("While waiting, remember to hydrate yourself!"):
                     ha="left",
                     va="center",
                     fontsize=7.3,
-                    color="#ffffff",
+                    color=palette["text-color"],
                     fontproperties=import_fonts(weight="bold"),
                 )
 
