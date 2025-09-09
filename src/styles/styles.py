@@ -97,7 +97,11 @@ class Styles:
                 "primary-color": "#ff4499",
                 "secondary-color": "#4499ff",
                 "third-color": "#3d3076",
+                "low-value-color": "#ee138c",
+                "med-value-color": "#ea7600",
+                "high-value-color": "#00ffd2",
                 "text-color": "#ffffff",
+                "title-color": "#f02b61",
                 "border-color": "#00ffff",
                 "line-color": "#004687",
             }

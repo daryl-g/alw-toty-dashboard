@@ -12,7 +12,7 @@ import plotly.graph_objects as go
 # Custom modules
 from styles import Styles
 from components import title_header, team_dropdown, player_dropdown
-from services import stats_percentiles
+from services import stats_percentiles, sorted_metrics
 from utils import display_markdown, map_player_positions, get_team_name
 
 # Get colour palette
@@ -60,21 +60,14 @@ with col1:
     played_90s: float = player_mins[1]
 
     # Box title
-    st.markdown(
-        f"""
-        ### {player_name}
-        #### {selected_team}
-        <p style='font-size: .9rem;'>Compared against players at <b>{player_position}</b> with 10 or more 90s.</p>
-        """,
-        unsafe_allow_html=True,
-    )
-
     st.html(
         f"""
-        <hr style='border-width: .5px; border-color: {palette["line-color"]}; margin-bottom: 1em;' />
+        <p style='font-size: 1.5rem; color: {palette["title-color"]}'><b>{player_name}</b> - <b>{selected_team}</b></p>
+        <p style='font-size: .9rem;'>Compared against players at <b>{player_position}</b> with 10 or more 90s.</p>
+        <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 1em;' />
         <p>Minutes played: <b>{mins_played} mins</b></p>
         <p>90s: <b>{played_90s} 90s</b></p>
-        <hr style='border-width: .5px; border-color: {palette["line-color"]}; margin-top: 1em;'/>
+        <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-top: 1em;'/>
         """
     )
 
@@ -93,12 +86,24 @@ with col1:
 
         # Flatten the dictionary
         for data_group in data.keys():
-            st.markdown(f"**{data_group}**")
+            st.html(
+                f"""
+                <p style='font-size: 1.2rem; margin-bottom: -1rem; margin-top: -.5rem'><b>{data_group}</b></p>
+                """
+            )
 
             raw_stats: list = [value[0] for value in data[data_group].values()]
             percentiles: list = [value[1] for value in data[data_group].values()]
             colours: list = [
-                "#ee138c" if value < 31 else "#ea7600" if value < 71 else "#45d6d3"
+                (
+                    palette["low-value-color"]
+                    if value < 31
+                    else (
+                        palette["med-value-color"]
+                        if value < 71
+                        else palette["high-value-color"]
+                    )
+                )
                 for value in percentiles
             ]
             stats_category: list = list(data[data_group].keys())
@@ -115,16 +120,39 @@ with col1:
                 )
             )
 
-            annotations: list = []
+            annotations: list = [
+                # Per 90s stats title
+                dict(
+                    xref="x1",
+                    yref="y1",
+                    y=-1.1,
+                    x=-1,
+                    text="p90",
+                    font=dict(family="sans-serif", size=14, weight="bold"),
+                    xanchor="right",
+                    showarrow=False,
+                ),
+                # Percentile ranks title
+                dict(
+                    xref="x1",
+                    yref="y1",
+                    y=-1.1,
+                    x=60,
+                    text="Percentile ranks",
+                    font=dict(family="sans-serif", size=14, weight="bold"),
+                    xanchor="right",
+                    showarrow=False,
+                ),
+            ]
             for cat, perc, stat in zip(stats_category, percentiles, raw_stats):
                 annotations.append(
                     dict(
                         xref="x1",
                         yref="y1",
                         y=cat,
-                        x=-2,
+                        x=-1,
                         text=str(stat),
-                        font=dict(family="sans-serif", size=12, weight="bold"),
+                        font=dict(family="sans-serif", size=12),
                         xanchor="right",
                         showarrow=False,
                     )
@@ -142,6 +170,9 @@ with col1:
                     showgrid=False,
                     showline=False,
                     zeroline=False,
+                    categoryorder="array",
+                    categoryarray=sorted_metrics(data_group),
+                    autorange="reversed",
                 ),
                 font=dict(
                     family="sans-serif",
@@ -151,6 +182,7 @@ with col1:
                 paper_bgcolor=palette["bg-color"],
                 plot_bgcolor=palette["bg-color"],
                 margin=dict(t=10, b=10),
+                height=250,
             )
 
             figs[fig_counter] = fig
@@ -159,4 +191,8 @@ with col1:
 
 # Similar players
 with col2:
-    st.markdown("Bleh")
+    st.html(
+        f"""
+        <p>Similar players to <b>{player_name}</b> (Position: <b>{player_position}</b>)</p>
+        """
+    )

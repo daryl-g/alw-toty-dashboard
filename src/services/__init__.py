@@ -1,1 +1,1 @@
-from .percentile_calc import stats_percentiles, role_percentiles
+from .percentile_calc import stats_percentiles, role_percentiles, sorted_metrics
