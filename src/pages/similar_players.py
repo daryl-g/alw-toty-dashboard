@@ -75,6 +75,10 @@ with col1:
         st.warning(
             f"""{player_name} did not play last season and has no data available :disappointed:"""
         )
+    elif played_90s < 8:
+        st.warning(
+            f"""{player_name} only played {mins_played} minutes last season and does not have enough data for comparison :disappointed:"""
+        )
     else:
         data: dict = stats_percentiles(
             selected_player=player_name,

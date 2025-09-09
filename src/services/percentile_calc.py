@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 # Custom modules
-from utils import load_csv, map_player_positions
+from utils import load_csv, map_player_positions, get_team_name
 
 
 # Stats percentiles calculator
@@ -33,6 +33,9 @@ def stats_percentiles(
         raise ValueError(
             f"No position is detected for {selected_player}. Please double check the input data."
         )
+
+    # Convert team name to Opta/FBRef's team name
+    selected_team = get_team_name(selected_team, mode="full")
 
     data: dict = {}
     info_cols: list = ["Player", "Squad", "Minutes played", "90s"]
