@@ -50,8 +50,4 @@ def title_header(
 
     if image_path is not None:
         with col1:
-            # render_image(image_path, image_width)
-            st.image(
-                image_path,
-                width=image_width,
-            )
+            st.image(image_path, width=image_width)

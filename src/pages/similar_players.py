@@ -17,15 +17,14 @@ from utils import display_markdown, map_player_positions, get_team_name
 
 # Get colour palette
 styles: Styles = Styles()
-palette: dict = styles.get_style(style="tokyo")
+styles.set_style(st.session_state.theme)
+palette: dict = styles.get_style(style=st.session_state.theme)
 
 # Set up page
 title_header(
     "Similar Players | ALW Recruitment Dashboard",
     "Similar Players",
     "",
-    image_path="src/assets/imgs/ALW_logo.png",
-    image_width=75,
 )
 display_markdown("src/assets/texts/similar_players_desc.md")
 
@@ -34,8 +33,6 @@ display_markdown("src/assets/texts/similar_players_desc.md")
 # Dropdowns
 selected_team: str = team_dropdown(multiselect=False)
 selected_player: str = player_dropdown(selected_team=selected_team, multiselect=False)
-
-st.markdown("---")
 
 # Processing data
 ## Potential to utilise cache/session data here?
@@ -90,11 +87,11 @@ with col1:
 
         # Flatten the dictionary
         for data_group in data.keys():
-            st.html(
-                f"""
-                <p style='font-size: 1.2rem; margin-bottom: -1rem; margin-top: -.5rem'><b>{data_group}</b></p>
-                """
-            )
+            # st.html(
+            #     f"""
+            #     <p style='font-size: 1.2rem; margin-bottom: -1rem; margin-top: -.5rem'><b>{data_group}</b></p>
+            #     """
+            # )
 
             raw_stats: list = [value[0] for value in data[data_group].values()]
             percentiles: list = [value[1] for value in data[data_group].values()]
@@ -163,6 +160,10 @@ with col1:
                 )
 
             fig.update_layout(
+                title=dict(
+                    text=data_group,
+                    font=dict(family="sans-serif", color=palette["text-color"]),
+                ),
                 xaxis=dict(
                     showgrid=False,
                     showline=False,
@@ -177,15 +178,13 @@ with col1:
                     categoryorder="array",
                     categoryarray=sorted_metrics(data_group),
                     autorange="reversed",
+                    tickfont=dict(color=palette["text-color"]),
                 ),
-                font=dict(
-                    family="sans-serif",
-                    size=35,
-                ),
+                font=dict(family="sans-serif", size=35, color=palette["text-color"]),
                 annotations=annotations,
                 paper_bgcolor=palette["bg-color"],
                 plot_bgcolor=palette["bg-color"],
-                margin=dict(t=10, b=10),
+                margin=dict(t=30, b=10),
                 height=250,
             )
 

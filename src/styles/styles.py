@@ -12,24 +12,35 @@ class Styles:
         pass
 
     # Return the CSS styles
-    def style_init(self):
+    def style_init(self, style_dict: dict):
         """
         Initialize the CSS styles for the Streamlit app.
 
-        Returns
-        -------
-        st.markdown
-            CSS styles as a string.
+        Args:
+            style_dict (dict): Dictionary with colour palette.
+        Returns:
+            st.html: CSS styles as a string.
         """
         return st.html(
             f"""
         <style>
+
+        /* Reduce top padding of the main block */
+        {self.main_block()}
         
         /* Set global background and text color */
-        {self.global_bg_text()}
+        {self.global_bg_text(
+            body_bg=style_dict["bg-color"],
+            main_bg=style_dict["bg-color"],
+            body_text=style_dict["text-color"],
+            p_text=style_dict["text-color"]
+        )}
 
         /* Header banner (top section) */
-        {self.header()}
+        {self.header(
+            header_bg=style_dict["bg-color"],
+            text_color=style_dict["text-color"]
+        )}
 
         /* Input boxes */
         {self.input_boxes()}
@@ -44,16 +55,24 @@ class Styles:
         {self.progress_bar()}
 
         /* Header text */
-        {self.header_text()}
+        {self.header_text(
+            header_color=style_dict["title-color"]
+        )}
 
         /* List items */
-        {self.list_items()}
+        {self.list_items(
+            ul_text=style_dict["text-color"]
+        )}
 
         /* Link text */
         {self.link_text()}
 
         /* Sidebar */
-        {self.sidebar()}
+        {self.sidebar(
+            sidebar_bg=style_dict["secondary-bg"],
+            sidebar_text=style_dict["text-color"],
+            sidebar_link=style_dict["text-color"]
+        )}
 
         /* Alert box */
         {self.alert_box()}
@@ -62,7 +81,12 @@ class Styles:
         {self.spinner()}
 
         /* Other UI elements */
-        {self.others()}
+        {self.others(
+            toolbar_bg=style_dict["bg-color"],
+            toolbar_text=style_dict["text-color"],
+            nav_text=style_dict["text-color"],
+            date_input_label_text=style_dict["text-color"]
+        )}
 
         /* Add new styles here as needed */
 
@@ -88,31 +112,85 @@ class Styles:
             )
 
         if style == "light":
-            return {"bg-color": "#fafafa", "text-color": "#010101"}
+            return {
+                "bg-color": "#e4e5f1",
+                "secondary-bg": "#9394a5",
+                "text-color": "#010101",
+                "primary-color": "#a8e6cf",
+                "secondary-color": "#ffd3b6",
+                "third-color": "#ff8b94",
+                "low-value-color": "#dd3636",
+                "med-value-color": "#f08022",
+                "high-value-color": "#33c771",
+                "title-color": "#010101",
+                "border-color": "#010101",
+                "line-color": "#010101",
+            }
         elif style == "dark":
-            return {"bg-color": "#010101", "text-color": "#fafafa"}
+            return {
+                "bg-color": "#121212",
+                "secondary-bg": "#252526",
+                "text-color": "#fafafa",
+                "primary-color": "#c40289",
+                "secondary-color": "#133e7c",
+                "third-color": "#493267",
+                "low-value-color": "#dd3636",
+                "med-value-color": "#ea7600",
+                "high-value-color": "#33c771",
+                "title-color": "#fafafa",
+                "border-color": "#ffffff",
+                "line-color": "#ffffff",
+            }
         elif style == "tokyo":
             return {
-                "bg-color": "#060c24",
-                "primary-color": "#ff4499",
-                "secondary-color": "#4499ff",
-                "third-color": "#3d3076",
+                "bg-color": "#01011b",
+                "secondary-bg": "#11073c",
+                "primary-color": "#c40289",
+                "secondary-color": "#133e7c",
+                "third-color": "#493267",
                 "low-value-color": "#ee138c",
                 "med-value-color": "#ea7600",
                 "high-value-color": "#00ffd2",
                 "text-color": "#ffffff",
-                "title-color": "#f02b61",
+                "title-color": "#ff0091",
                 "border-color": "#00ffff",
                 "line-color": "#004687",
             }
 
+    # Set the global style
+    def set_style(self, style: str = "dark") -> None:
+        """
+        Set the global style based on the variable passed down.
+
+        Args:
+            style (str): User chosen style. Options include `light`, `dark`, `tokyo`. Default is "dark" for dark mode.
+
+        Return:
+            None: Style class receives global style variable.
+        """
+        if style.lower() not in ["light", "dark", "tokyo"]:
+            raise ValueError(
+                "Unknown style option. Please choose from 'light', 'dark', 'tokyo'."
+            )
+
+        style_dict: dict = self.get_style(style)
+        self.style_init(style_dict)
+
+    # Reduce padding of the main block container
+    def main_block(self) -> str:
+        return """
+        .stMainBlockContainer {
+            padding-top: 4.5rem;
+        }
+        """
+
     # Set global background and text colour
     def global_bg_text(
         self,
-        body_bg: str = "#060c24",
+        body_bg: str = "#01011b",
         body_text: str = "#ffffff",
         p_text: str = "#ffffff",
-        main_bg: str = "#060c24",
+        main_bg: str = "#01011b",
     ) -> str:
         """
         Set global background and text colour.
@@ -144,122 +222,195 @@ class Styles:
         )
 
     # Header banner styles
-    def header(self) -> str:
+    def header(self, header_bg: str = "#01011b", text_color: str = "#ffffff") -> str:
         return """
         header {
-            background-color: #060c24 !important;  /* Header background */
-            color: white !important;  /* Header text color */
+            background-color: %s !important;  /* Header background */
+            color: %s !important;  /* Header text color */
         }
-        """
+        """ % (
+            header_bg,
+            text_color,
+        )
 
     # Input boxes styles
-    def input_boxes(self) -> str:
+    def input_boxes(
+        self, input_bg: str = "#ffffff", input_text: str = "#000000"
+    ) -> str:
         return """
         .stTextInput, .stTextArea, .stNumberInput, .stDateInput {
-            background-color: white !important;  /* Input box background */
-            color: black !important;  /* Input box text color */
+            background-color: %s !important;  /* Input box background */
+            color: %s !important;  /* Input box text color */
         }
-        """
+        """ % (
+            input_bg,
+            input_text,
+        )
 
     # Buttons styles
-    def buttons(self) -> str:
+    def buttons(
+        self,
+        button_text: str = "#ffffff",
+        button_bg: str = "#11523d",
+        button_border: str = "#11523d",
+        button_hover_bg: str = "#0d3f2f",
+        button_hover_border: str = "#0d3f2f",
+    ) -> str:
         return """
         .stButton > button {
-            color: white !important;  /* Button text color */
-            background-color: #11523d !important;  /* Button background */
-            border-color: #11523d !important;  /* Button border color */
+            color: %s !important;  /* Button text color */
+            background-color: %s !important;  /* Button background */
+            border-color: %s !important;  /* Button border color */
         }
         .stButton > button:hover {
-            background-color: #0d3f2f !important;  /* Button hover background */
-            border-color: #0d3f2f !important;  /* Button hover border color */
+            background-color: %s !important;  /* Button hover background */
+            border-color: %s !important;  /* Button hover border color */
         }
-        """
+        """ % (
+            button_text,
+            button_bg,
+            button_border,
+            button_hover_bg,
+            button_hover_border,
+        )
 
     # Sidebar styles
-    def sidebar(self) -> str:
+    def sidebar(
+        self,
+        sidebar_bg: str = "#11073c",
+        sidebar_text: str = "#ff8303",
+        sidebar_link: str = "#00ffd2",
+    ) -> str:
         return """
         .stSidebar {
-            background-color: #11073c !important;  /* Sidebar background */
-            color: #ff8e03 !important;  /* Sidebar text color */
+            background-color: %s !important;  /* Sidebar background */
+            color: %s !important;  /* Sidebar text color */
         }
 
         .stSidebar > div > div > ul > div > li > div > a > span {
-            color: #00ffd2 !important;  /* Sidebar link color */
+            color: %s !important;  /* Sidebar link color */
         }
-        """
+        """ % (
+            sidebar_bg,
+            sidebar_text,
+            sidebar_link,
+        )
 
     # Collapsed sidebar button styles
-    def sidebar_button(self) -> str:
+    def sidebar_button(
+        self,
+        collapsed_btn_bg: str = "#11523d",
+        collapsed_btn_border: str = "#11523d",
+        collapsed_btn_hover: str = "#ff8303",
+        collapsed_btn_hover_border: str = "#0d3f2f",
+    ) -> str:
         return """
         .stAppViewContainer > div > div > button {
-            background-color: #11523d !important;  /* Sidebar collapsed button background */
-            border-color: #11523d !important;  /* Sidebar collapsed button border color */
+            background-color: %s !important;  /* Sidebar collapsed button background */
+            border-color: %s !important;  /* Sidebar collapsed button border color */
         }
         .stAppViewContainer > div > div > button:hover {
-            background-color: #ff8e03 !important;  /* Sidebar collapsed button hover background */
-            border-color: #0d3f2f !important;  /* Sidebar collapsed button hover border color */ 
+            background-color: %s !important;  /* Sidebar collapsed button hover background */
+            border-color: %s !important;  /* Sidebar collapsed button hover border color */ 
         }
-        """
+        """ % (
+            collapsed_btn_bg,
+            collapsed_btn_border,
+            collapsed_btn_hover,
+            collapsed_btn_hover_border,
+        )
 
     # Progress bar styles
-    def progress_bar(self) -> str:
+    def progress_bar(self, progress_bg: str = "#ff9d09") -> str:
         return """
         .stProgress > div > div > div > div {
-            background-color: #ff9d09 !important;  /* Progress bar color */
+            background-color: %s !important;  /* Progress bar color */
         }
-        """
+        """ % (
+            progress_bg
+        )
 
     # Header text styles
-    def header_text(self) -> str:
+    def header_text(self, header_color: str = "#ff4499") -> str:
         return """
         h1, h2, h3, h4 {
-            color: #ff4499 !important;  /* Header text color */
+            color: %s !important;  /* Header text color */
         }
-        """
+        """ % (
+            header_color
+        )
 
     # List item styles
-    def list_items(self) -> str:
+    def list_items(self, ul_text: str = "#ffffff") -> str:
         return """
         .stMarkdown > div > ul {
-            color: white !important;  /* List item text color */
+            color: %s !important;  /* List item text color */
         }
-        """
+        """ % (
+            ul_text
+        )
 
     # Link text styles
-    def link_text(self) -> str:
+    def link_text(self, a_text: str = "#ff8e03") -> str:
         return """
         .stMarkdown > div > a, .stMarkdown > div > ul > a {
-            color: #ff8e03 !important;  /* Link text color */
+            color: %s !important;  /* Link text color */
         }
-        """
+        """ % (
+            a_text
+        )
 
     # Alert box styles
-    def alert_box(self) -> str:
+    def alert_box(
+        self,
+        alert_bg: str = "#11523d",
+        alert_text: str = "#ffffff",
+    ) -> str:
         return """
         .stAlert {
-            background-color: #11523d !important;  /* Alert box background */
-            color: white !important;  /* Alert box text color */
+            background-color: %s !important;  /* Alert box background */
+            color: %s !important;  /* Alert box text color */
             border-radius: 10px;  /* Alert box border radius */
         }
-        """
+        """ % (
+            alert_bg,
+            alert_text,
+        )
 
     # Spinner styles
-    def spinner(self) -> str:
+    def spinner(self, spinner_text: str = "#11523d") -> str:
         return """
         .stSpinner > div > div > p {
-            color: #11523d !important;  /* Spinner text color */
+            color: %s !important;  /* Spinner text color */
         }
-        """
+        """ % (
+            spinner_text
+        )
 
     # Other UI elements styles
-    def others(self) -> str:
+    def others(
+        self,
+        toolbar_bg: str = "#11523d",
+        toolbar_text: str = "#ff8303",
+        nav_text: str = "#ffffff",
+        date_input_label_text: str = "#ff8e03",
+    ) -> str:
         return """
-        .stToolbar {
-            background-color: #11523d !important;  /* Sidebar and toolbar background */
-            color: #ff8e03 !important;  /* Sidebar and toolbar text color */
+        .stAppToolbar {
+            background-color: %s !important;  /* Sidebar and toolbar background */
+            color: %s !important;  /* Sidebar and toolbar text color */
+        }
+
+        .stAppToolbar > div > div > div.rc-overflow-item > div > div {
+            color: %s !important;  /* Nav text color */
         }
 
         .stDateInput > label {
-            color: #ff8e03 !important;  /* Date input label color */
+            color: %s !important;  /* Date input label color */
         }
-        """
+        """ % (
+            toolbar_bg,
+            toolbar_text,
+            nav_text,
+            date_input_label_text,
+        )

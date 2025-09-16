@@ -8,7 +8,6 @@ View squad depth for all ALW clubs with their players from the 2024-25 season.
 # Imports
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 from mplsoccer import Pitch, inset_axes
 from matplotlib.axes import Axes
@@ -20,17 +19,21 @@ from utils import *
 
 # Get colour palette
 styles: Styles = Styles()
-palette: dict = styles.get_style(style="tokyo")
+styles.set_style(st.session_state.theme)
+palette: dict = styles.get_style(style=st.session_state.theme)
 
 # Set up page
 title_header(
     "Squad Depth | ALW Recruitment Dashboard",
     "2024-25 Squad Depth",
     "",
-    image_path="src/assets/imgs/ALW_logo.png",
-    image_width=75,
 )
 display_markdown("src/assets/texts/squad_depth_desc.md")  # Page description
+st.html(
+    f"""
+    <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 0em;' />
+    """
+)
 
 # ----------------------------------------------------------------------------------
 
@@ -40,7 +43,7 @@ with col1:
     selected_team = team_dropdown(multiselect=False)
 with col2:
     # Sorting method
-    sort_by = st.radio(
+    sort_by = st.sidebar.radio(
         label="Sorting method",
         options=["Minutes played", "Matches started"],
         index=0,
@@ -48,7 +51,7 @@ with col2:
     )
 with col3:
     # Distribution
-    distribution = st.radio(
+    distribution = st.sidebar.radio(
         label="Display appearances in",
         options=["Raw numbers", "Percentage"],
         index=1,

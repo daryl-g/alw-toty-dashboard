@@ -11,7 +11,7 @@ def navigation() -> None:
         (None): Renders the page with the navigation component on the left.
     """
     pages = {
-        "": [
+        "Home": [
             st.Page(
                 page="pages/home.py",
                 title="Home",
@@ -49,5 +49,5 @@ def navigation() -> None:
         ],
     }
 
-    pg = st.navigation(pages)
+    pg = st.navigation(pages, position="top")
     pg.run()

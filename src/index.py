@@ -4,13 +4,12 @@
 import streamlit as st
 
 # Custom modules
-from styles import Styles
 from components import navigation
 
-# Initialize styles
-with st.spinner("Loading page styling..."):
-    styles = Styles()
-    styles.style_init()
+# Set default theme
+st.session_state.theme = (
+    "dark" if "theme" not in st.session_state else st.session_state.theme
+)
 
 # Setup navigation
 navigation()
@@ -25,6 +24,5 @@ menu_items: dict = {
 st.set_page_config(
     page_icon=":soccer:",
     layout="wide",
-    initial_sidebar_state="auto",
     menu_items=menu_items,
 )
