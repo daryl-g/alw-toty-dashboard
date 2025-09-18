@@ -13,22 +13,19 @@ A football recruitment, Streamlit-hosted dashboard using Opta/FBRef's A-League W
 - Player's main and other positions are _painstakingly, manually_ gathered from Opta data via Fotmob and FBRef's match logs.
 - Advanced data files do not include player positions, but those files can be joined with the `PositionMap.csv` file to retrieve the positions.
 
-## Roadmap
+## Repository structure
 
-**Initial idea**:
+| Folder name                     | Description                                         |
+| ------------------------------- | --------------------------------------------------- |
+| [assets](./src/assets/)         | Storing images, font files, and Markdown text files |
+| [components](./src/components/) | Reusable Streamlit components and widgets           |
+| [data](./data/)                 | Raw data files captured from FBRef                  |
+| [pages](./src/pages/)           | Layout and data components for the app's pages      |
+| [services](./src/services/)     | Calculation and data manipulation logic             |
+| [styles](./src/styles/)         | App styling and team colours                        |
+| [utils](./src/utils/)           | Reusable utility functions                          |
 
-- Streamlit dashboard with around 5 pages:
-  - My own TOTY + best player for each position (by percentile + calculated role score).
-  - Raw stats + calculated role scores for all players of each position (Goalkeeper, Defender, Midfielder, Forward).
-- Roles are loosely based on Football Manager-defined roles.
-  - Some roles that require tracking data to identify like B2B Midfielder are removed/ignored.
-  - Role score are basically an overall rating, comprised of relevant metrics for each role along with its weighting, chosen manually.
-- Allow the user to modify the role score, the TOTY, and filter the data based on their preferences.
-- Use Streamlit's session data to move player selections between pages.
-- Rely more on Plotly to create interactive vizzes, instead of using mplsoccer for static vizzes.
-  - Gotta create these vizzes without the help of a package written specifically for football/soccer vizzes...somehow. Could be potential future work to create an mplsoccer equivalent, but for Plotly _(will need a lot of work tho)_.
-
-## References
-
-- https://github.com/lukarh/assists-tracking-dash-app
-- https://github.com/minimav/plotly-football-pitch
+| File name                  | Description                                           |
+| -------------------------- | ----------------------------------------------------- |
+| [index.py](./src/index.py) | Set up the app before the pages are loaded            |
+| [main.py](main.py)         | Driver code to run the app from command line/terminal |

@@ -57,6 +57,7 @@ def stats_percentiles(
             "Shooting",
             "Chance creating",
             "Distributing",
+            "Dead-ball distributing",
             "Possession",
             "Defending",
             "Discipline",
@@ -90,6 +91,7 @@ def percentiles_calculator(
         min_90s = 8
 
     file_path: str = "data/"
+    file_paths: list[str] = []
     if data_group == "Goalkeeping":
         file_path += "Goalkeeping.csv"
     elif data_group == "Advanced GK" or data_group == "Distribution (GK)":
@@ -97,10 +99,19 @@ def percentiles_calculator(
     elif data_group == "Shooting":
         file_path += "Shooting.csv"
     # Chance creating (Passing + GCA-SCA)
+    elif data_group == "Chance creating":
+        file_paths = ["Passing.csv", "GCASCA.csv"]
     # Distributing (Passing + PassTypes)
+    elif data_group == "Distributing":
+        file_paths = ["Passing.csv", "PassTypes.csv"]
+    # Dead-ball distributing (PassTypes + GCA-SCA)
+    elif data_group == "Dead-ball distributing":
+        file_paths = ["PassTypes.csv", "GCASCA.csv"]
     elif data_group == "Possession":
         file_path += "Possession.csv"
     # Defending (DefActions + Misc (just for the aerial duels lol))
+    elif data_group == "Defending":
+        file_paths = ["DefActions.csv", "Misc.csv"]
     elif data_group == "Discipline":
         file_path += "Misc.csv"
 
@@ -111,8 +122,17 @@ def percentiles_calculator(
         if data_group in ["Shooting", "Possession", "Discipline"]:
             data: pd.DataFrame = map_player_positions(file_path.split(".")[0])
         else:
-            # Get data from two files and then join them together
-            pass
+            # Get data from two files and then merge them together
+            file1: pd.DataFrame = map_player_positions(file_paths[0].split(".")[0])
+            file2: pd.DataFrame = map_player_positions(file_paths[1].split(".")[0])
+
+            data: pd.DataFrame = pd.merge(
+                left=file1,
+                right=file2,
+                how="inner",
+                on=["Player", "Squad", "90s", "Main Pos", "Other Pos"],
+            )
+
     metrics: list = sorted_metrics(data_group)
 
     # Get raw per 90s stats
@@ -228,6 +248,73 @@ def sorted_metrics(data_group: str) -> list:
             "npxG per Shot",
             "Penalties scored",
             "Penalties attempted",
+        ]
+    elif data_group == "Chance creating":
+        return [
+            "Assists",
+            "Expected Assists",
+            "Assist overperformance",
+            "Key passes",
+            "Crosses into Penalty Area",
+            "Goal-creating Actions",
+            "Shot-creating Actions",
+            "SCA Live-ball passes",
+            "SCA Take-ons",
+        ]
+    elif data_group == "Distributing":
+        return [
+            "Passes attempted",
+            "Pass completion percentage",
+            "Short passes attempted",
+            "Short pass completion percentage",
+            "Long passes attempted",
+            "Long pass completion percentage",
+            "Passes into final third",
+            "Passes into penalty box",
+            "Through balls",
+            "Progressive passes",
+        ]
+    elif data_group == "Dead-ball distributing":
+        return [
+            "Dead-ball Passes",
+            "GCA Dead-ball passes",
+            "SCA Dead-ball passes",
+            "Corner kicks",
+            "Inswinging corners",
+            "Outswinging corners",
+            "Straight corners",
+            "Free-kick Passes",
+            "Throw-ins",
+        ]
+    elif data_group == "Possession":
+        return [
+            "Passes received",
+            "Progressive passes received",
+            "Touches in attacking third",
+            "Touches in attacking box",
+            "Take-ons attempted",
+            "Take-ons successful rate",
+            "Carries made",
+            "Progressive carries",
+            "Carries into penalty box",
+            "Miscontrols",
+            "Dispossessed",
+        ]
+    elif data_group == "Defending":
+        return [
+            "Interceptions",
+            "Tackles won",
+            "Tackles in defensive third",
+            "Tackles in middle third",
+            "Tackles in attacking third",
+            "Dribbles challenged",
+            "Percentage of dribbles tackled",
+            "Aerial duels won",
+            "Aerial duels won percentage",
+            "Blocked shots",
+            "Blocked passes",
+            "Clearances",
+            "Ball recoveries",
         ]
     elif data_group == "Discipline":
         return ["Fouls committed", "Yellow cards", "Red cards"]
