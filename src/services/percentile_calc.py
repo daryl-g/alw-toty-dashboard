@@ -38,23 +38,36 @@ def stats_percentiles(
     selected_team = get_team_name(selected_team, mode="full")
 
     data: dict = {}
+    data_groups: list = []
 
     if player_position == "GK":
         data_groups = ["Goalkeeping", "Advanced GK", "Distribution (GK)"]
 
+        # Will move this out of the current if condition
+        # once the calculation logic is completed
         for group in data_groups:
             data[group] = percentiles_calculator(
                 data_group=group,
                 selected_player=selected_player,
                 selected_team=selected_team,
+                player_position=player_position,
             )
+    else:
+        data_groups = [
+            "Shooting",
+            "Chance creating",
+            "Distributing",
+            "Possession",
+            "Defending",
+            "Discipline",
+        ]
 
     return data
 
 
 # Percentiles calculation logic
 def percentiles_calculator(
-    data_group: str, selected_player: str, selected_team: str
+    data_group: str, selected_player: str, selected_team: str, player_position: str
 ) -> dict:
     """
     Main repetitive logic to calculate the percentiles.
@@ -63,20 +76,43 @@ def percentiles_calculator(
         data_group (str): Data group to identify the calculation logic.
         selected_player (str): User selected player from the Dropdown option.
         selected_team (str): Only for filtering purpose if there are two players with the same name.
+        player_position (str): Selected player's position.
 
     Returns:
         (dict): Dictionary of per 90 stats and percentiles.
     """
     info_cols: list = ["Player", "Squad", "Minutes played", "90s"]
 
+    min_90s: int = 0
+    if player_position == "GK":
+        min_90s = 5
+    else:
+        min_90s = 8
+
     file_path: str = "data/"
     if data_group == "Goalkeeping":
         file_path += "Goalkeeping.csv"
     elif data_group == "Advanced GK" or data_group == "Distribution (GK)":
         file_path += "AdvancedGK.csv"
+    elif data_group == "Shooting":
+        file_path += "Shooting.csv"
+    # Chance creating (Passing + GCA-SCA)
+    # Distributing (Passing + PassTypes)
+    elif data_group == "Possession":
+        file_path += "Possession.csv"
+    # Defending (DefActions + Misc (just for the aerial duels lol))
+    elif data_group == "Discipline":
+        file_path += "Misc.csv"
 
     # Load data
-    data: pd.DataFrame = load_csv(file_path, display=False)
+    if player_position == "GK":
+        data: pd.DataFrame = load_csv(file_path, display=False)
+    else:
+        if data_group in ["Shooting", "Possession", "Discipline"]:
+            data: pd.DataFrame = map_player_positions(file_path.split(".")[0])
+        else:
+            # Get data from two files and then join them together
+            pass
     metrics: list = sorted_metrics(data_group)
 
     # Get raw per 90s stats
@@ -86,7 +122,16 @@ def percentiles_calculator(
     ]
 
     # Preprocessing for percentile rank
-    filtered_stats = data.loc[data["90s"] >= 8].reset_index(drop=True)
+    if player_position != "GK":
+        filtered_stats = data.loc[
+            (
+                (data["Main Pos"] == player_position)
+                | data["Other Pos"].astype(str).str.contains(player_position)
+            )
+            & (data["90s"] >= min_90s)
+        ].reset_index(drop=True)
+    else:
+        filtered_stats = data.loc[data["90s"] >= min_90s].reset_index(drop=True)
     filtered_info = filtered_stats.loc[
         :,
         (
@@ -173,6 +218,19 @@ def sorted_metrics(data_group: str) -> list:
             "Launches completion percentage",
             "Throws attempted",
         ]
+    elif data_group == "Shooting":
+        return [
+            "Goals",
+            "Expected Goals",
+            "Non-penalty xG",
+            "xG overperformance",
+            "Shots on Target percentage",
+            "npxG per Shot",
+            "Penalties scored",
+            "Penalties attempted",
+        ]
+    elif data_group == "Discipline":
+        return ["Fouls committed", "Yellow cards", "Red cards"]
 
 
 # Role standard_percentiles calculator

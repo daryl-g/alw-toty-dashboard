@@ -1,0 +1,2 @@
+- Theme switcher is a bit twitchy and inconsistent if the user only stays on the Home page and change between themes.
+- Matplotlib vizzes are not mobile friendly.

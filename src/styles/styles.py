@@ -75,17 +75,29 @@ class Styles:
         )}
 
         /* Alert box */
-        {self.alert_box()}
+        /* {self.alert_box()} */
 
         /* Spinner */
         {self.spinner()}
+
+        /* Expander */
+        {self.expander(
+            expander_text=style_dict["text-color"],
+            summary_bg=style_dict['bg-color'],
+            summary_border=style_dict["border-color"],
+            focused_summary_bg=style_dict["secondary-bg"],
+            focused_summary_text=style_dict["text-color"],
+            hovered_summary_bg=style_dict['title-color'],
+            hovered_summary_text=style_dict['bg-color']
+        )}
 
         /* Other UI elements */
         {self.others(
             toolbar_bg=style_dict["bg-color"],
             toolbar_text=style_dict["text-color"],
             nav_text=style_dict["text-color"],
-            date_input_label_text=style_dict["text-color"]
+            widget_label_text=style_dict["text-color"],
+            widget_help=style_dict["text-color"]
         )}
 
         /* Add new styles here as needed */
@@ -313,6 +325,10 @@ class Styles:
             background-color: %s !important;  /* Sidebar collapsed button hover background */
             border-color: %s !important;  /* Sidebar collapsed button hover border color */ 
         }
+
+        .stSidebarContent > .stSidebarUserContent > p {
+            color: black !important
+        }
         """ % (
             collapsed_btn_bg,
             collapsed_btn_border,
@@ -387,13 +403,54 @@ class Styles:
             spinner_text
         )
 
+    # Spinner styles
+    def expander(
+        self,
+        expander_text: str = "#11523d",
+        summary_bg: str = "#000000",
+        summary_border: str = "#000000",
+        focused_summary_bg: str = "#ffffff",
+        focused_summary_text: str = "#000000",
+        hovered_summary_bg: str = "#000000",
+        hovered_summary_text: str = "#ffffff",
+    ) -> str:
+        return """
+        .stExpander {
+            color: %s !important;  /* Expander text color */
+        }
+
+        .stExpander > details > summary {
+            background-color: %s !important; /* Expander summary background color */
+            border-color: %s !important; /* Expander border color */
+        }
+
+        .stExpander > details > summary:focus, summary:focus-within {
+            background-color: %s !important; /* Expander summary background color */
+            color: %s !important; /* Expander summary text color */
+        }
+
+        .stExpander > details > summary:hover {
+            background-color: %s !important;
+            color: %s !important
+        }
+        """ % (
+            expander_text,
+            summary_bg,
+            summary_border,
+            focused_summary_bg,
+            focused_summary_text,
+            hovered_summary_bg,
+            hovered_summary_text,
+        )
+
     # Other UI elements styles
     def others(
         self,
         toolbar_bg: str = "#11523d",
         toolbar_text: str = "#ff8303",
         nav_text: str = "#ffffff",
-        date_input_label_text: str = "#ff8e03",
+        widget_label_text: str = "#ff8e03",
+        widget_help: str = "#ffffff",
     ) -> str:
         return """
         .stAppToolbar {
@@ -405,12 +462,17 @@ class Styles:
             color: %s !important;  /* Nav text color */
         }
 
-        .stDateInput > label {
-            color: %s !important;  /* Date input label color */
+        .stDateInput > label, .stButtonGroup > label {
+            color: %s !important;  /* Widgets label color */
+        }
+
+        .stButtonGroup > label > label > .stTooltipIcon > .stTooltipHoverTarget > svg.icon {
+            stroke: %s !important; /* Widget help button color */
         }
         """ % (
             toolbar_bg,
             toolbar_text,
             nav_text,
-            date_input_label_text,
+            widget_label_text,
+            widget_help,
         )

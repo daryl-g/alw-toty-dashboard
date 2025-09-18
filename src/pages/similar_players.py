@@ -26,7 +26,8 @@ title_header(
     "Similar Players",
     "",
 )
-display_markdown("src/assets/texts/similar_players_desc.md")
+with st.expander("Page description and guides"):
+    display_markdown("src/assets/texts/similar_players_desc.md")
 
 # ----------------------------------------------------------------------------------
 
@@ -55,12 +56,13 @@ with col1:
     player_position: str = selected_player.split("(")[1].replace(")", "").strip()
     mins_played: int = int(player_mins[0])
     played_90s: float = player_mins[1]
+    min_90s: int = 5 if player_position == "GK" else 8
 
     # Box title
     st.html(
         f"""
         <p style='font-size: 1.5rem; color: {palette["title-color"]}'><b>{player_name}</b> - <b>{selected_team}</b></p>
-        <p style='font-size: .9rem;'>Compared against players at <b>{player_position}</b> with 10 or more 90s.</p>
+        <p style='font-size: .9rem;'>Compared against players at <b>{player_position}</b> with {min_90s} or more 90s.</p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 1em;' />
         <p>Minutes played: <b>{mins_played} mins</b></p>
         <p>90s: <b>{played_90s} 90s</b></p>
@@ -72,9 +74,9 @@ with col1:
         st.warning(
             f"""{player_name} did not play last season and has no data available :disappointed:"""
         )
-    elif played_90s < 8:
+    elif played_90s < min_90s:
         st.warning(
-            f"""{player_name} only played {mins_played} minutes last season and does not have enough data for comparison :disappointed:"""
+            f"""{player_name} only played {mins_played} minutes last season and did not have enough data for comparison :disappointed:"""
         )
     else:
         data: dict = stats_percentiles(
@@ -85,7 +87,6 @@ with col1:
 
         figs: list[go.Figure] = [go.Figure() for _ in range(len(data))]
 
-        # Flatten the dictionary
         for data_group in data.keys():
             # st.html(
             #     f"""
@@ -93,6 +94,7 @@ with col1:
             #     """
             # )
 
+            # Flatten the dictionary
             raw_stats: list = [value[0] for value in data[data_group].values()]
             percentiles: list = [value[1] for value in data[data_group].values()]
             colours: list = [
@@ -101,7 +103,7 @@ with col1:
                     if value < 31
                     else (
                         palette["med-value-color"]
-                        if value < 71
+                        if value < 81
                         else palette["high-value-color"]
                     )
                 )
@@ -199,3 +201,14 @@ with col2:
         <p>Similar players to <b>{player_name}</b> (Position: <b>{player_position}</b>)</p>
         """
     )
+
+    if mins_played == 0:
+        st.warning(
+            f"""{player_name} did not play last season and has no data available :disappointed:"""
+        )
+    elif played_90s < 5:
+        st.warning(
+            f"""{player_name} only played {mins_played} minutes last season and did not have enough data for comparison :disappointed:"""
+        )
+    else:
+        pass

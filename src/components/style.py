@@ -39,7 +39,7 @@ def theme_switcher():
             else default_option
         ),
         selection_mode="single",
-        help="Change between light, dark modes, and a custom Tokyo Night theme.",
+        help="Change between light, dark modes, and a custom Tokyo Night/Cyberpunk theme.",
     )
 
     # Change styling

@@ -28,7 +28,8 @@ title_header(
     "2024-25 Squad Depth",
     "",
 )
-display_markdown("src/assets/texts/squad_depth_desc.md")  # Page description
+with st.expander("Page description and guides"):
+    display_markdown("src/assets/texts/squad_depth_desc.md")  # Page description
 st.html(
     f"""
     <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 0em;' />

@@ -27,4 +27,8 @@ st.html(
     """
 )
 
-display_markdown("src/assets/texts/title_readme.md")
+with st.expander("Disclaimer and notes"):
+    display_markdown("src/assets/texts/title_readme.md")
+
+with st.expander("Known bugs and issues"):
+    display_markdown("src/assets/texts/known_bugs.md")
