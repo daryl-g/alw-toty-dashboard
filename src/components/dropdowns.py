@@ -21,7 +21,7 @@ def team_dropdown(multiselect: bool) -> str | list | None:
     team_options.sort()
 
     if multiselect:
-        selected_teams: list = st.multiselect(
+        selected_teams: list = st.sidebar.multiselect(
             label="Select team(s)",
             options=team_options,
             default=None,
@@ -29,7 +29,7 @@ def team_dropdown(multiselect: bool) -> str | list | None:
         )
         return selected_teams
     else:
-        selected_team: str | None = st.selectbox(
+        selected_team: str | None = st.sidebar.selectbox(
             label="Select team",
             options=team_options,
             index=0,
@@ -78,7 +78,7 @@ def player_dropdown(selected_team: str, multiselect: bool) -> str | list | None:
     )
 
     if multiselect:
-        selected_players: list = st.multiselect(
+        selected_players: list = st.sidebar.multiselect(
             label="Select player(s)",
             options=slice_df["Display"],
             default=None,
@@ -86,7 +86,7 @@ def player_dropdown(selected_team: str, multiselect: bool) -> str | list | None:
         )
         return selected_players
     else:
-        selected_team: str | None = st.selectbox(
+        selected_team: str | None = st.sidebar.selectbox(
             label="Select player",
             options=slice_df["Display"],
             index=0,

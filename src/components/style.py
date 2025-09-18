@@ -1,6 +1,12 @@
 # Imports
 import streamlit as st
 
+# Custom style module
+from styles import Styles
+
+# Initialise style module
+styles = Styles()
+
 
 # Switch themes
 def theme_switcher():
@@ -20,29 +26,22 @@ def theme_switcher():
     }
     default_option: str = "dark"
 
-    # Add theme to session state
     if "theme" not in st.session_state:
         st.session_state.theme = default_option
 
-    st.segmented_control(
+    style = st.segmented_control(
         label="Theme",
         options=options.keys(),
         format_func=lambda option: options[option],
-        default=default_option,
+        default=(
+            st.session_state.theme
+            if st.session_state.theme is not None
+            else default_option
+        ),
         selection_mode="single",
-        help="Change between light, dark modes, and a custom Tokyo Night theme.",
-        on_change=force_selection,
+        help="Change between light, dark modes, and a custom Tokyo Night/Cyberpunk theme.",
     )
 
-
-def force_selection() -> None:
-    """
-    Temporary replacement for the 'required' keyword of Streamlit's segmented_control element...until Streamlit implements it.
-
-    Returns:
-        Replace theme in session state if it is None.
-    """
-    default_option: str = "dark"
-
-    if st.session_state.theme is None:
-        st.session_state.theme = default_option
+    # Change styling
+    st.session_state.theme = style if style is not None else default_option
+    styles.set_style(st.session_state.theme)

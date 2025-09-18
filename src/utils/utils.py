@@ -237,11 +237,11 @@ def map_player_positions(file_name: str, position_sort: bool = False) -> pd.Data
                 "RWB",
                 "DM",
                 "CM",
+                "AM",
                 "LM",
                 "LW",
                 "RM",
                 "RW",
-                "AM",
                 "CF",
             ],
         ).astype(str)
