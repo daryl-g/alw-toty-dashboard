@@ -223,7 +223,7 @@ def map_player_positions(file_name: str, position_sort: bool = False) -> pd.Data
         left_on=["Player", "Squad"],
         right_on=["Player", "Squad"],
         how="left",
-    ).drop(["Pos"], axis=1)
+    )
 
     if position_sort == True:
         joined["Main Pos"] = pd.Categorical(

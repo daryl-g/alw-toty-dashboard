@@ -2,7 +2,6 @@
 
 # Imports
 import pandas as pd
-import numpy as np
 
 # Custom modules
 from utils import load_csv, map_player_positions, get_team_name
@@ -42,16 +41,6 @@ def stats_percentiles(
 
     if player_position == "GK":
         data_groups = ["Goalkeeping", "Advanced GK", "Distribution (GK)"]
-
-        # Will move this out of the current if condition
-        # once the calculation logic is completed
-        for group in data_groups:
-            data[group] = percentiles_calculator(
-                data_group=group,
-                selected_player=selected_player,
-                selected_team=selected_team,
-                player_position=player_position,
-            )
     else:
         data_groups = [
             "Shooting",
@@ -62,6 +51,14 @@ def stats_percentiles(
             "Defending",
             "Discipline",
         ]
+
+    for group in data_groups:
+        data[group] = percentiles_calculator(
+            data_group=group,
+            selected_player=selected_player,
+            selected_team=selected_team,
+            player_position=player_position,
+        )
 
     return data
 
@@ -91,47 +88,51 @@ def percentiles_calculator(
         min_90s = 8
 
     file_path: str = "data/"
+    file_name: str = ""
     file_paths: list[str] = []
     if data_group == "Goalkeeping":
-        file_path += "Goalkeeping.csv"
+        file_name = "Goalkeeping.csv"
     elif data_group == "Advanced GK" or data_group == "Distribution (GK)":
-        file_path += "AdvancedGK.csv"
+        file_name = "AdvancedGK.csv"
     elif data_group == "Shooting":
-        file_path += "Shooting.csv"
+        file_name = "Shooting"
     # Chance creating (Passing + GCA-SCA)
     elif data_group == "Chance creating":
-        file_paths = ["Passing.csv", "GCASCA.csv"]
+        file_paths = ["Passing", "GCASCA"]
     # Distributing (Passing + PassTypes)
     elif data_group == "Distributing":
-        file_paths = ["Passing.csv", "PassTypes.csv"]
+        file_paths = ["Passing", "PassTypes"]
     # Dead-ball distributing (PassTypes + GCA-SCA)
     elif data_group == "Dead-ball distributing":
-        file_paths = ["PassTypes.csv", "GCASCA.csv"]
+        file_paths = ["PassTypes", "GCASCA"]
     elif data_group == "Possession":
-        file_path += "Possession.csv"
+        file_name = "Possession"
     # Defending (DefActions + Misc (just for the aerial duels lol))
     elif data_group == "Defending":
-        file_paths = ["DefActions.csv", "Misc.csv"]
+        file_paths = ["DefActions", "Misc"]
     elif data_group == "Discipline":
-        file_path += "Misc.csv"
+        file_name = "Misc"
 
     # Load data
     if player_position == "GK":
-        data: pd.DataFrame = load_csv(file_path, display=False)
+        data: pd.DataFrame = load_csv(file_path + file_name, display=False)
     else:
         if data_group in ["Shooting", "Possession", "Discipline"]:
-            data: pd.DataFrame = map_player_positions(file_path.split(".")[0])
+            data: pd.DataFrame = map_player_positions(file_name)
         else:
             # Get data from two files and then merge them together
-            file1: pd.DataFrame = map_player_positions(file_paths[0].split(".")[0])
-            file2: pd.DataFrame = map_player_positions(file_paths[1].split(".")[0])
+            file1: pd.DataFrame = map_player_positions(file_paths[0])
+            file2: pd.DataFrame = map_player_positions(file_paths[1])
 
             data: pd.DataFrame = pd.merge(
                 left=file1,
                 right=file2,
                 how="inner",
                 on=["Player", "Squad", "90s", "Main Pos", "Other Pos"],
+                suffixes=(None, "_y"),
             )
+
+            data = data.drop([col for col in data.columns if "_y" in col], axis=1)
 
     metrics: list = sorted_metrics(data_group)
 
@@ -142,7 +143,41 @@ def percentiles_calculator(
     ]
 
     # Preprocessing for percentile rank
-    if player_position != "GK":
+    if player_position in ["LW", "LM"]:
+        main_pos_1 = "LW" if player_position == "LW" else "LM"
+        main_pos_2 = "LM" if player_position == "LW" else "LW"
+        filtered_stats = data.loc[
+            (
+                (
+                    (data["Main Pos"] == main_pos_1)
+                    | data["Other Pos"].astype(str).str.contains(main_pos_1)
+                )
+                | (
+                    (data["Main Pos"] == main_pos_2)
+                    | data["Other Pos"].astype(str).str.contains(main_pos_2)
+                )
+            )
+            & (data["90s"] >= min_90s)
+        ].reset_index(drop=True)
+    elif player_position in ["RW", "RM"]:
+        main_pos_1 = "RW" if player_position == "RW" else "RM"
+        main_pos_2 = "RM" if player_position == "RW" else "RW"
+        filtered_stats = data.loc[
+            (
+                (
+                    (data["Main Pos"] == main_pos_1)
+                    | data["Other Pos"].astype(str).str.contains(main_pos_1)
+                )
+                | (
+                    (data["Main Pos"] == main_pos_2)
+                    | data["Other Pos"].astype(str).str.contains(main_pos_2)
+                )
+            )
+            & (data["90s"] >= min_90s)
+        ].reset_index(drop=True)
+    elif player_position == "GK":
+        filtered_stats = data.loc[(data["90s"] >= min_90s)].reset_index(drop=True)
+    else:
         filtered_stats = data.loc[
             (
                 (data["Main Pos"] == player_position)
@@ -150,8 +185,7 @@ def percentiles_calculator(
             )
             & (data["90s"] >= min_90s)
         ].reset_index(drop=True)
-    else:
-        filtered_stats = data.loc[data["90s"] >= min_90s].reset_index(drop=True)
+
     filtered_info = filtered_stats.loc[
         :,
         (
@@ -171,6 +205,12 @@ def percentiles_calculator(
         percentiles["Shots on Target conceded"] = (
             1 - percentiles["Shots on Target conceded"]
         )
+    elif data_group == "Possession":
+        percentiles["Miscontrols"] = 1 - percentiles["Miscontrols"]
+        percentiles["Dispossessed"] = 1 - percentiles["Dispossessed"]
+    elif data_group == "Discipline":
+        for col in metrics:
+            percentiles[col] = 1 - percentiles[col]
 
     # Convert to 1-100 scale and round up
     percentiles = (percentiles * 100).round(1)

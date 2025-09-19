@@ -9,6 +9,7 @@ Inspired by Fotmob and also an attempt to do better than Fotmob's attempt at dis
 **Notes**:
 
 - Player positions are not guaranteed to be 100% correct, the positions are gathered and assumed using Soccerdonna's classification and FBRef's match logs. This is a known problem with women's football data and something that I have written about [here](https://www.talking-tactics.com/i/164710406/the-data) if you are interested in reading about the problems that I faced while doing the pre-processing step for the dataset.
+- A few stats have been inverted (the less, the better), including all discipline stats and a couple of possession stats (miscontrols and dispossessed), since it makes more sense than ranking it by pure volume. Please take this into account when comparing against Fotmob's percentile ranks.
 
 **Dev notes**:
 
