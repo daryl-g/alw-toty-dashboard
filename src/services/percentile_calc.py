@@ -136,6 +136,14 @@ def percentiles_calculator(
 
     metrics: list = sorted_metrics(data_group)
 
+    if data_group == "Defending":
+        teamPossession: pd.DataFrame = load_csv(
+            "data/TeamPossession.csv", display=False
+        )
+
+        # Calculate opposition's possession time
+        teamPossession["oppPoss"] = 100 - teamPossession["Possession %"]
+
     # Get raw per 90s stats
     selected_stats: pd.DataFrame = data.loc[
         ((data["Player"] == selected_player) & (data["Squad"] == selected_team)),
@@ -358,6 +366,63 @@ def sorted_metrics(data_group: str) -> list:
         ]
     elif data_group == "Discipline":
         return ["Fouls committed", "Yellow cards", "Red cards"]
+
+
+# Weighting
+def positional_weighting(player_position: str) -> dict:
+    """
+    Retrieve metric groups weighting for each position.
+
+    Args:
+        player_position (str): Selected player's position.
+
+    Returns:
+        (dict): Dictionary with the weighting for each metric group.
+    """
+    # Input checking
+    if player_position not in [
+        "GK",
+        "CB",
+        "LB",
+        "LWB",
+        "RB",
+        "RWB",
+        "DM",
+        "CM",
+        "AM",
+        "LM",
+        "LW",
+        "RM",
+        "RW",
+        "CF",
+    ]:
+        raise ValueError(
+            "Unknown player position. Please only choose from the available positions."
+        )
+
+    # Positional weighting
+    if player_position == "GK":
+        {
+            "Shot stopping": {
+                "Post-shot xG": 1,
+                "PSxG difference": 1,
+                "Save percentage": 1,
+                "Cross stopped percentage": 1,
+                "Penalties save percentage": 1,
+            },
+            "Sweeping": {
+                "Out-of-box defensive actions": 1,
+                "Average OPA distance": 1,
+            },
+            "Distributing": {
+                "Passes attempted": 1,
+                "Launched goal kicks percentage": 1,
+                "Launches completion percentage": 1,
+                "Throws attempted": 1,
+            },
+        }
+
+    pass
 
 
 # Role standard_percentiles calculator
