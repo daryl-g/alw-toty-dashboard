@@ -36,7 +36,6 @@ selected_team: str = team_dropdown(multiselect=False)
 selected_player: str = player_dropdown(selected_team=selected_team, multiselect=False)
 
 # Processing data
-## Potential to utilise cache/session data here?
 playing_time: pd.DataFrame = map_player_positions("PlayingTime")
 player_mins = playing_time.loc[
     (playing_time["Player"] == selected_player.split("(")[0].strip())
@@ -62,7 +61,7 @@ with col1:
     st.html(
         f"""
         <p style='font-size: 1.5rem; color: {palette["title-color"]}'><b>{player_name}</b> - <b>{selected_team}</b></p>
-        <p style='font-size: .9rem;'>Compared against players at <b>{player_position}</b> with {min_90s} or more 90s.</p>
+        <p style='font-size: .9rem;'>Compared against players at <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b> with {min_90s} or more 90s.</p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 1em;' />
         <p>Minutes played: <b>{mins_played} mins</b></p>
         <p>90s: <b>{played_90s} 90s</b></p>
@@ -163,7 +162,11 @@ with col1:
 
             fig.update_layout(
                 title=dict(
-                    text=data_group,
+                    text=(
+                        data_group
+                        if data_group != "Defending"
+                        else "Defending (Possession-adjusted)"
+                    ),
                     font=dict(family="sans-serif", color=palette["text-color"]),
                 ),
                 xaxis=dict(
@@ -187,7 +190,7 @@ with col1:
                 paper_bgcolor=palette["bg-color"],
                 plot_bgcolor=palette["bg-color"],
                 margin=dict(t=30, b=10),
-                height=250,
+                height=300,
             )
 
             figs[fig_counter] = fig
@@ -198,7 +201,7 @@ with col1:
 with col2:
     st.html(
         f"""
-        <p>Similar players to <b>{player_name}</b> (Position: <b>{player_position}</b>)</p>
+        <p>Similar players to <b>{player_name}</b> (Position: <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b>)</p>
         """
     )
 

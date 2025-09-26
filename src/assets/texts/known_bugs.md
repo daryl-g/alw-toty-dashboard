@@ -1,2 +1,3 @@
 - Theme switcher is a bit twitchy and inconsistent if the user only stays on the Home page and change between themes.
 - Matplotlib vizzes are not mobile friendly.
+- FBRef's data only includes the regular season and not the Finals series (for some reason!!!).

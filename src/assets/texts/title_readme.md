@@ -1,3 +1,5 @@
 - This dashboard is a fan-made, unofficial project. This dashboard, or the creator of this dashboard, has no relations to the A-Leagues, the Australian Professional Leagues (APL), the Professional Footballers Australia (PFA), or Football Australia (FA) during the time this dashboard was developed. Therefore, any data, ratings, results generated using this dashboard are considered **unofficial** unless stated otherwise.
 
 - All data used in this dashboard are from [Opta via FBRef](https://fbref.com/en/comps/196/A-League-Women-Stats) and were captured before the 2024-25 Grand Final (May 18th, 2025). Thus, this dashboard does not contain the latest transfers _(such as Sharn Freier &rightarrow; Wolfsburg, Lourdes Bosch &rightarrow; Denver Summit, or even Laini Freier's retirement)_.
+
+  - Apparently, this does not matter that much. FBRef's data only includes the regular season and not the Finals series (for some reason!!!). Thus, there will be noticeable differences in per 90 stats and percentile ranks when comparing to Fotmob's data even though both Fotmob and FBRef use the same source (Opta).
