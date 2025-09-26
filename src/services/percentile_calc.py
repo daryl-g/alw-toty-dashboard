@@ -401,8 +401,9 @@ def positional_weighting(player_position: str) -> dict:
         )
 
     # Positional weighting
+    # Goalkeeper
     if player_position == "GK":
-        {
+        return {
             "Shot stopping": {
                 "Post-shot xG": 1,
                 "PSxG difference": 1,
@@ -421,8 +422,202 @@ def positional_weighting(player_position: str) -> dict:
                 "Throws attempted": 1,
             },
         }
-
-    pass
+    # Centre-back
+    elif player_position == "CB":
+        return {
+            "Chance creating": {"Key passes": 1, "Shot-creating Actions": 1},
+            "Distributing": {
+                "Short pass completion percentage": 1,
+                "Long pass completion percentage": 1,
+                "Passes into final third": 1,
+                "Progressive passes": 1,
+            },
+            "Possession": {
+                "Carries made": 1,
+                "Progressive carries": 1,
+            },
+            "Defending": {
+                "Interceptions": 1,
+                "Tackles won": 1,
+                "Percentage of dribbles tackled": 1,
+                "Aerial duels won percentage": 1,
+                "Blocked shots": 1,
+                "Blocked passes": 1,
+                "Clearances": 1,
+            },
+            "Discipline": {"Fouls committed": 1, "Yellow cards": 1, "Red cards": 1},
+        }
+    # Full-back/Wing-back
+    elif player_position in ["LB", "LWB", "RB", "RWB"]:
+        return {
+            "Chance creating": {
+                "Assists": 1,
+                "Expected Assists": 1,
+                "Crosses into penalty area": 1,
+                "Key passes": 1,
+                "Shot-creating Actions": 1,
+            },
+            "Distributing": {
+                "Passes into final third": 1,
+                "Passes into penalty box": 1,
+                "Through balls": 1,
+                "Progressive passes": 1,
+            },
+            "Possession": {
+                "Take-ons successful rate": 1,
+                "Carries made": 1,
+                "Carries into penalty box": 1,
+                "Progressive carries": 1,
+            },
+            "Defending": {
+                "Interceptions": 1,
+                "Tackles won": 1,
+                "Percentage of dribbles tackled": 1,
+                "Aerial duels won percentage": 1,
+                "Blocked passes": 1,
+                "Clearances": 1,
+            },
+            "Discipline": {"Fouls committed": 1, "Yellow cards": 1, "Red cards": 1},
+        }
+    # Defensive/central midfielder
+    elif player_position in ["DM", "CM"]:
+        return {
+            "Chance creating": {
+                "Expected Assists": 1,
+                "Key passes": 1,
+                "Shot-creating Actions": 1,
+            },
+            "Distributing": {
+                "Passes attempted": 1,
+                "Short pass completion percentage": 1,
+                "Long pass completion percentage": 1,
+                "Passes into final third": 1,
+                "Passes into penalty box": 1,
+                "Through balls": 1,
+                "Progressive passes": 1,
+            },
+            "Possession": {
+                "Passes received": 1,
+                "Progressive passes received": 1,
+                "Carries made": 1,
+                "Progressive carries": 1,
+                "Dispossessed": 1,
+            },
+            "Defending": {
+                "Interceptions": 1,
+                "Tackles won": 1,
+                "Tackles in middle third": 1,
+                "Percentage of dribbles tackled": 1,
+                "Blocked passes": 1,
+                "Clearances": 1,
+            },
+            "Discipline": {"Fouls committed": 1, "Yellow cards": 1, "Red cards": 1},
+        }
+    # Attacking midfielder
+    elif player_position == "AM":
+        return {
+            "Shooting": {
+                "Goals": 1,
+                "Non-penalty xG": 1,
+                "xG overperformance": 1,
+                "npxG per Shot": 1,
+            },
+            "Chance creating": {
+                "Expected Assists": 1,
+                "Assist overperformance": 1,
+                "Key passes": 1,
+                "Goal-creating Actions": 1,
+                "Shot-creating Actions": 1,
+            },
+            "Distributing": {
+                "Passes attempted": 1,
+                "Passes into final third": 1,
+                "Passes into penalty box": 1,
+                "Through balls": 1,
+                "Progressive passes": 1,
+            },
+            "Possession": {
+                "Passes received": 1,
+                "Progressive passes received": 1,
+                "Touches in attacking third": 1,
+                "Take-ons successful rate": 1,
+                "Carries made": 1,
+                "Progressive carries": 1,
+                "Dispossessed": 1,
+            },
+            "Defending": {
+                "Tackles in attacking third": 1,
+                "Blocked passes": 1,
+            },
+        }
+    # Winger/Wide midfielder
+    elif player_position in ["LM", "LW", "RM", "RW"]:
+        return {
+            "Shooting": {
+                "Goals": 1,
+                "Non-penalty xG": 1,
+                "xG overperformance": 1,
+                "npxG per Shot": 1,
+            },
+            "Chance creating": {
+                "Expected Assists": 1,
+                "Assist overperformance": 1,
+                "Key passes": 1,
+                "Goal-creating Actions": 1,
+                "Shot-creating Actions": 1,
+                "Crosses into penalty area": 1,
+            },
+            "Distributing": {
+                "Long pass completion percentage": 1,
+                "Passes into penalty box": 1,
+                "Through balls": 1,
+                "Progressive passes": 1,
+            },
+            "Possession": {
+                "Passes received": 1,
+                "Progressive passes received": 1,
+                "Touches in attacking third": 1,
+                "Take-ons attempted": 1,
+                "Take-ons successful rate": 1,
+                "Carries made": 1,
+                "Progressive carries": 1,
+                "Dispossessed": 1,
+            },
+            "Defending": {
+                "Tackles in attacking third": 1,
+                "Blocked passes": 1,
+            },
+        }
+    # Striker
+    elif player_position == "CF":
+        return {
+            "Shooting": {
+                "Goals": 1,
+                "Non-penalty xG": 1,
+                "xG overperformance": 1,
+                "Shots on Target percentage": 1,
+                "npxG per Shot": 1,
+            },
+            "Chance creating": {
+                "Expected Assists": 1,
+                "Assist overperformance": 1,
+                "Key passes": 1,
+                "Goal-creating Actions": 1,
+                "Shot-creating Actions": 1,
+            },
+            "Possession": {
+                "Passes received": 1,
+                "Progressive passes received": 1,
+                "Touches in attacking third": 1,
+                "Take-ons successful rate": 1,
+                "Carries made": 1,
+                "Progressive carries": 1,
+            },
+            "Defending": {
+                "Tackles in attacking third": 1,
+                "Blocked passes": 1,
+            },
+        }
 
 
 # Role standard_percentiles calculator

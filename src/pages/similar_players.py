@@ -36,7 +36,6 @@ selected_team: str = team_dropdown(multiselect=False)
 selected_player: str = player_dropdown(selected_team=selected_team, multiselect=False)
 
 # Processing data
-## Potential to utilise cache/session data here?
 playing_time: pd.DataFrame = map_player_positions("PlayingTime")
 player_mins = playing_time.loc[
     (playing_time["Player"] == selected_player.split("(")[0].strip())

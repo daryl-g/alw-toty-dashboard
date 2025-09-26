@@ -38,7 +38,6 @@ selected_team: str = team_dropdown(multiselect=False)
 selected_player: str = player_dropdown(selected_team=selected_team, multiselect=False)
 
 # Processing data
-## Potential to utilise cache/session data here?
 playing_time: pd.DataFrame = map_player_positions("PlayingTime")
 player_mins = playing_time.loc[
     (playing_time["Player"] == selected_player.split("(")[0].strip())
@@ -171,6 +170,43 @@ with containers[3]:
                     name="",
                 )
             )
+            ## Average lines
+            # fig.add_trace(
+            #     go.Scatter(
+            #         x=[
+            #             data.loc[:, metrics_selection[0]].mean()
+            #             for _ in range(len(data))
+            #         ],
+            #         y=[
+            #             (
+            #                 0
+            #                 if data.loc[:, metrics_selection[1]].min() >= 0
+            #                 else data.loc[:, metrics_selection[1]].min() - 0.2
+            #             ),
+            #             data.loc[:, metrics_selection[1]].max() + 0.5,
+            #         ],
+            #         mode="lines",
+            #         line=dict(color=palette["line-color"], dash="dash", width=2),
+            #     )
+            # )
+            # fig.add_trace(
+            #     go.Scatter(
+            #         y=[
+            #             data.loc[:, metrics_selection[1]].mean()
+            #             for _ in range(len(data))
+            #         ],
+            #         x=[
+            #             (
+            #                 0
+            #                 if data.loc[:, metrics_selection[0]].min() >= 0
+            #                 else data.loc[:, metrics_selection[0]].min() - 0.2
+            #             ),
+            #             data.loc[:, metrics_selection[0]].max() + 0.5,
+            #         ],
+            #         mode="lines",
+            #         line=dict(color=palette["line-color"], dash="dash", width=2),
+            #     )
+            # )
 
             fig.update_layout(
                 title=dict(
@@ -279,6 +315,43 @@ with containers[4]:
                     name="",
                 )
             )
+            ## Average lines
+            # fig.add_trace(
+            #     go.Scatter(
+            #         x=[
+            #             data.loc[:, metrics_selection[0]].mean()
+            #             for _ in range(len(data))
+            #         ],
+            #         y=[
+            #             (
+            #                 0
+            #                 if data.loc[:, metrics_selection[1]].min() >= 0
+            #                 else data.loc[:, metrics_selection[1]].min() - 0.2
+            #             ),
+            #             data.loc[:, metrics_selection[1]].max() + 0.5,
+            #         ],
+            #         mode="lines",
+            #         line=dict(color=palette["line-color"], dash="dash", width=2),
+            #     )
+            # )
+            # fig.add_trace(
+            #     go.Scatter(
+            #         y=[
+            #             data.loc[:, metrics_selection[1]].mean()
+            #             for _ in range(len(data))
+            #         ],
+            #         x=[
+            #             (
+            #                 0
+            #                 if data.loc[:, metrics_selection[0]].min() >= 0
+            #                 else data.loc[:, metrics_selection[0]].min() - 0.2
+            #             ),
+            #             data.loc[:, metrics_selection[0]].max() + 0.5,
+            #         ],
+            #         mode="lines",
+            #         line=dict(color=palette["line-color"], dash="dash", width=2),
+            #     )
+            # )
 
             fig.update_layout(
                 title=dict(
@@ -385,6 +458,43 @@ with containers[5]:
                     name="",
                 )
             )
+            ## Average lines
+            # fig.add_trace(
+            #     go.Scatter(
+            #         x=[
+            #             data.loc[:, metrics_selection[0]].mean()
+            #             for _ in range(len(data))
+            #         ],
+            #         y=[
+            #             (
+            #                 0
+            #                 if data.loc[:, metrics_selection[1]].min() >= 0
+            #                 else data.loc[:, metrics_selection[1]].min() - 0.2
+            #             ),
+            #             data.loc[:, metrics_selection[1]].max() + 0.5,
+            #         ],
+            #         mode="lines",
+            #         line=dict(color=palette["line-color"], dash="dash", width=2),
+            #     )
+            # )
+            # fig.add_trace(
+            #     go.Scatter(
+            #         y=[
+            #             data.loc[:, metrics_selection[1]].mean()
+            #             for _ in range(len(data))
+            #         ],
+            #         x=[
+            #             (
+            #                 0
+            #                 if data.loc[:, metrics_selection[0]].min() >= 0
+            #                 else data.loc[:, metrics_selection[0]].min() - 0.2
+            #             ),
+            #             data.loc[:, metrics_selection[0]].max() + 0.5,
+            #         ],
+            #         mode="lines",
+            #         line=dict(color=palette["line-color"], dash="dash", width=2),
+            #     )
+            # )
 
             fig.update_layout(
                 title=dict(
