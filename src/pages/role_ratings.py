@@ -6,7 +6,7 @@ import pandas as pd
 
 # Custom modules
 from styles import Styles
-from components import title_header, team_dropdown, player_dropdown
+from components import title_header, team_dropdown, player_dropdown, position_dropdown
 from services import positional_weighting
 from utils import display_markdown, map_player_positions, get_team_name
 
@@ -51,6 +51,10 @@ mins_played: int = int(player_mins[0])
 played_90s: float = player_mins[1]
 min_90s: int = 5 if player_position == "GK" else 8
 
+# Set player position
+st.session_state.selected_position = player_position
+selected_position: str = position_dropdown(multiselect=False)
+
 # ----------------------------------------------------------------------------------
 
 # Display columns
@@ -62,7 +66,7 @@ with col1:
     st.html(
         f"""
         <p style='font-size: 1.5rem; color: {palette["title-color"]}'><b>{player_name}</b> - <b>{selected_team}</b></p>
-        <p style='font-size: .9rem;'>Compared against players at <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b> with {min_90s} or more 90s.</p>
+        <p style='font-size: .9rem;'>Compared against players at <b>{"LW and LM" if selected_position in ["LW", "LM"] else "RW and RM" if selected_position in ["RW", "RM"] else selected_position}</b> with {min_90s} or more 90s.</p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 1em;' />
         <p>Minutes played: <b>{mins_played} mins</b></p>
         <p>90s: <b>{played_90s} 90s</b></p>
@@ -85,14 +89,14 @@ with col1:
 with col2:
     st.html(
         """
-        <p style='font-size: 1.3rem;'><b>Weighting groups</b></p>
+        <p style='font-size: 1.3rem;'><b>Metrics significance</b></p>
         """
     )
 
     # Get the weightings
-    weightings: dict = positional_weighting(player_position=player_position)
+    weightings: dict = positional_weighting(player_position=selected_position)
 
     # Display the weighting groups
     for group in weightings:
         with st.expander(label=group):
-            st.table(data=weightings[group])
+            st.table(data=weightings[group], border="horizontal")

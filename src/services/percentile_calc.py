@@ -7,6 +7,7 @@ import pandas as pd
 from utils import load_csv, map_player_positions, get_team_name
 
 
+# ----------------------------------------------------------------------------------
 # Stats percentiles calculator
 def stats_percentiles(
     selected_player: str, selected_team: str, player_position: str
@@ -136,6 +137,7 @@ def percentiles_calculator(
 
     metrics: list = sorted_metrics(data_group)
 
+    # For possession-adjusted stats
     if data_group == "Defending":
         teamPossession: pd.DataFrame = load_csv(
             "data/TeamPossession.csv", display=False
@@ -247,6 +249,7 @@ def percentiles_calculator(
     return stats
 
 
+# ----------------------------------------------------------------------------------
 # Sorted metrics
 def sorted_metrics(data_group: str) -> list:
     """
@@ -405,113 +408,125 @@ def positional_weighting(player_position: str) -> dict:
     if player_position == "GK":
         return {
             "Shot stopping": {
-                "Post-shot xG": 1,
-                "PSxG difference": 1,
-                "Save percentage": 1,
-                "Cross stopped percentage": 1,
-                "Penalties save percentage": 1,
+                "Post-shot xG": 0.9,
+                "PSxG difference": 0.9,
+                "Save percentage": 0.7,
+                "Cross stopped percentage": 0.6,
+                "Penalties save percentage": 0.5,
             },
             "Sweeping": {
-                "Out-of-box defensive actions": 1,
-                "Average OPA distance": 1,
+                "Out-of-box defensive actions": 0.6,
+                "Average OPA distance": 0.5,
             },
             "Distributing": {
-                "Passes attempted": 1,
-                "Launched goal kicks percentage": 1,
-                "Launches completion percentage": 1,
-                "Throws attempted": 1,
+                "Passes attempted": 0.6,
+                "Launched goal kicks percentage": 0.5,
+                "Launches completion percentage": 0.4,
+                "Throws attempted": 0.4,
             },
         }
     # Centre-back
     elif player_position == "CB":
         return {
-            "Chance creating": {"Key passes": 1, "Shot-creating Actions": 1},
+            "Chance creating": {"Key passes": 0.4, "Shot-creating Actions": 0.3},
             "Distributing": {
-                "Short pass completion percentage": 1,
-                "Long pass completion percentage": 1,
-                "Passes into final third": 1,
-                "Progressive passes": 1,
+                "Short pass completion percentage": 0.6,
+                "Long pass completion percentage": 0.6,
+                "Progressive passes": 0.5,
+                "Passes into final third": 0.4,
             },
             "Possession": {
-                "Carries made": 1,
-                "Progressive carries": 1,
+                "Carries made": 0.5,
+                "Progressive carries": 0.4,
             },
             "Defending": {
-                "Interceptions": 1,
-                "Tackles won": 1,
-                "Percentage of dribbles tackled": 1,
-                "Aerial duels won percentage": 1,
-                "Blocked shots": 1,
-                "Blocked passes": 1,
-                "Clearances": 1,
+                "Tackles won": 0.9,
+                "Interceptions": 0.8,
+                "Percentage of dribbles tackled": 0.7,
+                "Aerial duels won percentage": 0.7,
+                "Blocked shots": 0.6,
+                "Blocked passes": 0.6,
+                "Clearances": 0.6,
             },
-            "Discipline": {"Fouls committed": 1, "Yellow cards": 1, "Red cards": 1},
+            "Discipline": {
+                "Fouls committed": 0.6,
+                "Yellow cards": 0.5,
+                "Red cards": 0.5,
+            },
         }
     # Full-back/Wing-back
     elif player_position in ["LB", "LWB", "RB", "RWB"]:
         return {
             "Chance creating": {
-                "Assists": 1,
-                "Expected Assists": 1,
-                "Crosses into penalty area": 1,
-                "Key passes": 1,
-                "Shot-creating Actions": 1,
+                "Crosses into Penalty Area": 0.8,
+                "Assists": 0.7,
+                "Expected Assists": 0.7,
+                "Shot-creating Actions": 0.7,
+                "Key passes": 0.6,
             },
             "Distributing": {
-                "Passes into final third": 1,
-                "Passes into penalty box": 1,
-                "Through balls": 1,
-                "Progressive passes": 1,
+                "Passes into final third": 0.6,
+                "Passes into penalty box": 0.6,
+                "Progressive passes": 0.6,
+                "Through balls": 0.5,
             },
             "Possession": {
-                "Take-ons successful rate": 1,
-                "Carries made": 1,
-                "Carries into penalty box": 1,
-                "Progressive carries": 1,
+                "Take-ons successful rate": 0.8,
+                "Carries made": 0.6,
+                "Progressive carries": 0.6,
+                "Carries into penalty box": 0.5,
             },
             "Defending": {
-                "Interceptions": 1,
-                "Tackles won": 1,
-                "Percentage of dribbles tackled": 1,
-                "Aerial duels won percentage": 1,
-                "Blocked passes": 1,
-                "Clearances": 1,
+                "Interceptions": 0.8,
+                "Tackles won": 0.7,
+                "Percentage of dribbles tackled": 0.7,
+                "Blocked passes": 0.6,
+                "Aerial duels won percentage": 0.5,
+                "Clearances": 0.5,
             },
-            "Discipline": {"Fouls committed": 1, "Yellow cards": 1, "Red cards": 1},
+            "Discipline": {
+                "Fouls committed": 0.6,
+                "Yellow cards": 0.4,
+                "Red cards": 0.4,
+            },
         }
     # Defensive/central midfielder
     elif player_position in ["DM", "CM"]:
         return {
             "Chance creating": {
-                "Expected Assists": 1,
-                "Key passes": 1,
-                "Shot-creating Actions": 1,
+                "Expected Assists": 0.6,
+                "Key passes": 0.7,
+                "Shot-creating Actions": 0.6,
             },
             "Distributing": {
-                "Passes attempted": 1,
-                "Short pass completion percentage": 1,
-                "Long pass completion percentage": 1,
-                "Passes into final third": 1,
-                "Passes into penalty box": 1,
-                "Through balls": 1,
-                "Progressive passes": 1,
+                "Passes attempted": 0.9,
+                "Short pass completion percentage": 0.8,
+                "Long pass completion percentage": 0.7,
+                "Passes into final third": 0.7,
+                "Through balls": 0.7,
+                "Progressive passes": 0.7,
+                "Passes into penalty box": 0.6,
             },
             "Possession": {
-                "Passes received": 1,
-                "Progressive passes received": 1,
-                "Carries made": 1,
-                "Progressive carries": 1,
-                "Dispossessed": 1,
+                "Passes received": 0.7,
+                "Progressive passes received": 0.6,
+                "Dispossessed": 0.5,
+                "Carries made": 0.4,
+                "Progressive carries": 0.4,
             },
             "Defending": {
-                "Interceptions": 1,
-                "Tackles won": 1,
-                "Tackles in middle third": 1,
-                "Percentage of dribbles tackled": 1,
-                "Blocked passes": 1,
-                "Clearances": 1,
+                "Interceptions": 0.8,
+                "Tackles won": 0.7,
+                "Tackles in middle third": 0.7,
+                "Blocked passes": 0.6,
+                "Percentage of dribbles tackled": 0.5,
+                "Clearances": 0.3,
             },
-            "Discipline": {"Fouls committed": 1, "Yellow cards": 1, "Red cards": 1},
+            "Discipline": {
+                "Fouls committed": 0.4,
+                "Yellow cards": 0.3,
+                "Red cards": 0.3,
+            },
         }
     # Attacking midfielder
     elif player_position == "AM":
@@ -565,7 +580,7 @@ def positional_weighting(player_position: str) -> dict:
                 "Key passes": 1,
                 "Goal-creating Actions": 1,
                 "Shot-creating Actions": 1,
-                "Crosses into penalty area": 1,
+                "Crosses into Penalty Area": 1,
             },
             "Distributing": {
                 "Long pass completion percentage": 1,
