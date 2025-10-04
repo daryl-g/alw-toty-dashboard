@@ -48,11 +48,14 @@ class Styles:
         /* Buttons */
         {self.buttons()}
 
-        /* Collapsed sidebar button */
-        {self.sidebar_button()}
-
         /* Progress bar */
         {self.progress_bar()}
+
+        /* Slider */
+        {self.slider(
+            slider_btn_bg=style_dict['primary-color'],
+            slider_text_color=style_dict["text-color"]
+        )}
 
         /* Header text */
         {self.header_text(
@@ -72,6 +75,16 @@ class Styles:
             sidebar_bg=style_dict["secondary-bg"],
             sidebar_text=style_dict["text-color"],
             sidebar_link=style_dict["text-color"]
+        )}
+
+        /* Collapsed sidebar button */
+        {self.sidebar_button(
+            collapsed_btn_bg=style_dict["bg-color"],
+            collapsed_btn_border=style_dict["border-color"],
+            collapsed_sidebar_btn_bg=style_dict['secondary-bg'],
+            collapsed_sidebar_btn_border=style_dict["border-color"],
+            collapsed_btn_hover=style_dict["primary-color"],
+            collapsed_btn_hover_border=style_dict['border-color']
         )}
 
         /* Alert box */
@@ -313,15 +326,25 @@ class Styles:
         self,
         collapsed_btn_bg: str = "#11523d",
         collapsed_btn_border: str = "#11523d",
+        collapsed_sidebar_btn_bg: str = "#11523d",
+        collapsed_sidebar_btn_border: str = "#11523d",
+        collapsed_btn_icon: str = "#ffffff",
         collapsed_btn_hover: str = "#ff8303",
         collapsed_btn_hover_border: str = "#0d3f2f",
     ) -> str:
         return """
-        .stAppViewContainer > div > div > button {
+        .stAppToolbar > div > div > div > button, .stSidebar > div > div > div > button  {
             background-color: %s !important;  /* Sidebar collapsed button background */
             border-color: %s !important;  /* Sidebar collapsed button border color */
         }
-        .stAppViewContainer > div > div > button:hover {
+        .stSidebar > div > div > div > button  {
+            background-color: %s !important;  /* Sidebar collapsed button background */
+            border-color: %s !important;  /* Sidebar collapsed button border color */
+        }
+        .stAppToolbar > div > div > div > button > span > span, .stSidebar > div > div > div > button > span > span {
+            color: %s !important;  /* Sidebar collapsed icon background */
+        }
+        .stAppToolbar > div > div > div > button:hover, .stSidebar > div > div > div > button:hover {
             background-color: %s !important;  /* Sidebar collapsed button hover background */
             border-color: %s !important;  /* Sidebar collapsed button hover border color */ 
         }
@@ -332,6 +355,9 @@ class Styles:
         """ % (
             collapsed_btn_bg,
             collapsed_btn_border,
+            collapsed_sidebar_btn_bg,
+            collapsed_sidebar_btn_border,
+            collapsed_btn_icon,
             collapsed_btn_hover,
             collapsed_btn_hover_border,
         )
@@ -403,7 +429,7 @@ class Styles:
             spinner_text
         )
 
-    # Spinner styles
+    # Expander styles
     def expander(
         self,
         expander_text: str = "#11523d",
@@ -443,6 +469,22 @@ class Styles:
             hovered_summary_text,
         )
 
+    # Slider styles
+    def slider(
+        self, slider_btn_bg: str = "#ffffff", slider_text_color: str = "#ffffff"
+    ) -> str:
+        return """
+        .stSlider > div > div > div > div {
+            background-color: %s !important;  /* Slider button background */
+        }
+        .stSlider > div > div > div > div > div {
+            color: %s !important;  /* Slider indicator background */
+        }
+        """ % (
+            slider_btn_bg,
+            slider_text_color,
+        )
+
     # Other UI elements styles
     def others(
         self,
@@ -462,7 +504,7 @@ class Styles:
             color: %s !important;  /* Nav text color */
         }
 
-        .stDateInput > label, .stButtonGroup > label {
+        .stDateInput > label, .stButtonGroup > label, .stSelectbox > label, .stRadio > label, .stSlider > label, .stRadio > div > label > div {
             color: %s !important;  /* Widgets label color */
         }
 

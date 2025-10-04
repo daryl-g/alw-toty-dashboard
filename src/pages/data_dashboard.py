@@ -27,8 +27,7 @@ title_header(
     "",
 )
 with st.expander("Page description and guides"):
-    st.markdown("Nothing here...just yet!")
-#     display_markdown("src/assets/texts/squad_depth_desc.md")  # Page description
+    display_markdown("src/assets/texts/data_dashboard_desc.md")  # Page description
 st.html(
     f"""
     <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 0em;' />
@@ -96,9 +95,9 @@ with containers[0]:
         <p style='font-size: 1.4rem; color: {palette["title-color"]}'><b>{selected_player}</b></p>
         <p style='font-size: 1.1rem; color: {palette["title-color"]}'><b>{selected_team}</b></p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 1em;' />
-        <p style='font-size: .9rem;'>Compared against players at <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b> with {min_90s} or more 90s.</p>
-        <p>Minutes played: <b>{mins_played} mins</b></p>
-        <p>90s: <b>{played_90s} 90s</b></p>
+        <p style='font-size: .9rem; color: {palette["title-color"]}'>Compared against players at <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b> with {min_90s} or more 90s.</p>
+        <p style='color: {palette["title-color"]}'>Minutes played: <b>{mins_played} mins</b></p>
+        <p style='color: {palette["title-color"]}'>90s: <b>{played_90s} 90s</b></p>
         """
     )
 

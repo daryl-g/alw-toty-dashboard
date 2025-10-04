@@ -38,29 +38,37 @@ st.html(
 
 # ----------------------------------------------------------------------------------
 
-col1, col2, col3 = st.columns([0.3, 0.25, 0.35])
-with col1:
-    # Dropdown
-    selected_team = team_dropdown(multiselect=False)
-with col2:
-    # Sorting method
-    sort_by = st.sidebar.radio(
-        label="Sorting method",
-        options=["Minutes played", "Matches started"],
-        index=0,
-        captions=["Who played the most minutes?", "Who started the most matches?"],
-    )
-with col3:
-    # Distribution
-    distribution = st.sidebar.radio(
-        label="Display appearances in",
-        options=["Raw numbers", "Percentage"],
-        index=1,
-        captions=[
-            "How many matches did the player start/subbed on/unused?",
-            "What is the percentage of matches started/subbed on/unused by the player?",
-        ],
-    )
+# Dropdowns
+# Team dropdown
+selected_team = team_dropdown(multiselect=False)
+## Data selection
+data_selection = st.sidebar.radio(
+    label="Data to display",
+    options=["Playing time", "Contract expiry"],
+    index=0,
+    captions=[
+        "Who played regularly last season?",
+        "Whose contract is/was about to end?",
+    ],
+)
+## Sorting method
+sort_by = st.sidebar.radio(
+    label="Sorting method",
+    options=["Minutes played", "Matches started"],
+    index=0,
+    captions=["Who played the most minutes?", "Who started the most matches?"],
+)
+## Distribution
+distribution = st.sidebar.radio(
+    label="Display appearances in",
+    options=["Raw numbers", "Percentage"],
+    index=1,
+    captions=[
+        "How many matches did the player start/subbed on/unused?",
+        "What is the percentage of matches started/subbed on/unused by the player?",
+    ],
+)
+
 
 # Preparation
 ## Set up pitch

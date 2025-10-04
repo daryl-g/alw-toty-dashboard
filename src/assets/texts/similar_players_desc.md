@@ -1,4 +1,7 @@
-Inspired by Fotmob and also an attempt to do better than Fotmob's attempt at displaying A-League Women's data.
+- Similar Players page is comprised of a player's per 90 stats and percentile ranks breakdown, inspired by Fotmob and FBRef's scout report styles, and similarity percentage rating.
+- Percentile ranks are calculated and compared against positional peers with a minimum 90s played (5 90s for goalkeepers and 8 90s for outfield players).
+- Minimum 90s is used to eliminate potential outliers due to players with insufficient playing time or too small sample size that can potentially skew the data heavily.
+- Similarity percentages do not use all data on display on the left section, but only key metrics for each position being used (key metrics can be found on the Role Ratings page).
 
 **How to read**:
 

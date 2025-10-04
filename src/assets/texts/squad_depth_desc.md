@@ -1,4 +1,5 @@
-Page description goes here...
+- Squad Depth is determined based on each player's playing time and match appearances from the 2024-25 season.
+- This page can also be used to see players' contract expiry and identify positions where teams will need to find replacements.
 
 **Notes**:
 
