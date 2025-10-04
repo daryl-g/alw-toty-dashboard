@@ -13,12 +13,15 @@ import plotly.graph_objects as go
 from styles import Styles
 from components import title_header, team_dropdown, player_dropdown
 from services import stats_percentiles, sorted_metrics, player_similarity
-from utils import display_markdown, map_player_positions, get_team_name
+from utils import display_markdown, map_player_positions, get_team_name, plotly_config
 
 # Get colour palette
 styles: Styles = Styles()
 styles.set_style(st.session_state.theme)
 palette: dict = styles.get_style(style=st.session_state.theme)
+
+# Get Plotly plot config
+plot_config: dict = plotly_config()
 
 # Set up page
 title_header(
@@ -34,6 +37,9 @@ with st.expander("Page description and guides"):
 # Dropdowns
 selected_team: str = team_dropdown(multiselect=False)
 selected_player: str = player_dropdown(selected_team=selected_team, multiselect=False)
+min_similarity: int = st.sidebar.select_slider(
+    label="Minimum similarity %", options=[i for i in range(0, 105, 5)], value=80
+)
 
 # Processing data
 playing_time: pd.DataFrame = map_player_positions("PlayingTime")
@@ -194,7 +200,7 @@ with col1:
             )
 
             figs[fig_counter] = fig
-            st.plotly_chart(figs[fig_counter])
+            st.plotly_chart(figs[fig_counter], config=plot_config)
             fig_counter += 1
 
 # Similar players
@@ -202,6 +208,7 @@ with col2:
     st.html(
         f"""
         <p>Similar players to <b>{player_name}</b> (Position: <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b>)</p>
+        <p style='font-size: .9rem;'>(Minimum similarity: {min_similarity}%)</p>
         """
     )
 
@@ -218,7 +225,7 @@ with col2:
             selected_player=player_name,
             selected_team=selected_team,
             player_position=player_position,
-        )
+        ).loc[lambda x: x >= min_similarity]
 
         similarity_fig = go.Figure()
         similarity_fig.add_trace(
@@ -255,4 +262,4 @@ with col2:
             height=1500 if player_position != "GK" else 750,
         )
 
-        st.plotly_chart(similarity_fig)
+        st.plotly_chart(similarity_fig, config=plot_config)

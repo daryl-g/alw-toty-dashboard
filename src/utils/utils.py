@@ -248,3 +248,18 @@ def map_player_positions(file_name: str, position_sort: bool = False) -> pd.Data
         joined = joined.sort_values(by="Main Pos").reset_index(drop=True)
 
     return joined
+
+
+def plotly_config() -> dict:
+    """
+    Just a quick function to get the configurations for the Plotly plot.
+
+    Returns:
+        dict: Dictionary with Plotly plot configs.
+    """
+    return {
+        "scrollZoom": False,
+        "responsiveness": True,
+        "doubleClick": "reset+autosize",
+        "displayModeBar": False,
+    }
