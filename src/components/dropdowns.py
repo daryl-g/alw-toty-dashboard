@@ -64,6 +64,7 @@ def player_dropdown(selected_team: str, multiselect: bool) -> str | list | None:
     Reusable player selection dropdown component.
 
     Args:
+        selected_team (str): Team name selected by the user.
         multiselect (bool): If True, allows multiple player selections.
 
     Returns:
@@ -115,7 +116,7 @@ def player_dropdown(selected_team: str, multiselect: bool) -> str | list | None:
             options=slice_df["Display"],
             default=(
                 st.session_state.selected_players
-                if "selected_players" in st.session_players
+                if "selected_players" in st.session_state
                 else None
             ),
             placeholder="Select one or more players...",
@@ -141,3 +142,74 @@ def player_dropdown(selected_team: str, multiselect: bool) -> str | list | None:
         except ValueError:
             st.session_state.selected_player = 0
         return selected_player
+
+
+def position_dropdown(
+    multiselect: bool, default_position: str = None
+) -> str | list | None:
+    """
+    Dropdown to select player position.
+
+    Args:
+        default_position (str): Player's default position from the DataFrame. If None, assume the chosen position is GK.
+        multiselect (bool): If True, allows multiple player selections.
+
+    Returns:
+        (str | list | None): Selected player(s) from the dropdown. None if no selection is made.
+    """
+    positions: list = [
+        "CB",
+        "LB",
+        "LWB",
+        "RB",
+        "RWB",
+        "DM",
+        "CM",
+        "LM",
+        "LW",
+        "RM",
+        "RW",
+        "AM",
+        "CF",
+    ]
+
+    if default_position is None:
+        default_position = positions[0]
+
+    # Check for session data
+    if "selected_positions" not in st.session_state:
+        st.session_state.selected_positions = [default_position]
+    if "selected_position" not in st.session_state:
+        st.session_state.selected_position = positions.index(default_position)
+
+    if multiselect:
+        selected_positions: list = st.sidebar.multiselect(
+            label="Select position(s)",
+            options=positions,
+            default=(
+                st.session_state.selected_positions
+                if "selected_positions" in st.session_state
+                else None
+            ),
+            placeholder="Select one or more positions...",
+        )
+        st.session_state.selected_positions = selected_positions
+        return selected_positions
+    else:
+        selected_position: str | None = st.sidebar.selectbox(
+            label="Select position",
+            options=(
+                positions if st.session_state.selected_position != "GK" else ["GK"]
+            ),
+            index=(
+                positions.index(st.session_state.selected_position)
+                if ("selected_position" in st.session_state)
+                else positions.index(default_position)
+            ),
+            placeholder="Select a position...",
+        )
+        try:
+            st.session_state.selected_position = positions.index(selected_position)
+        except ValueError:
+            st.session_state.selected_position = positions.index(default_position)
+        return selected_position

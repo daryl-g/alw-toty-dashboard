@@ -28,7 +28,7 @@ def navigation() -> None:
             ),
             st.Page(
                 page="pages/role_ratings.py",
-                title="Role Rating",
+                title="Position Rating",
                 icon=":material/123:",
                 url_path="role_rating",
             ),
