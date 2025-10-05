@@ -25,6 +25,7 @@ class Styles:
             f"""
         <style>
 
+        /* Layout customisations */
         /* Reduce top padding of the main block */
         {self.main_block()}
         
@@ -36,25 +37,16 @@ class Styles:
             p_text=style_dict["text-color"]
         )}
 
+        /* Container styling */
+        {self.container(
+            column_border=style_dict["border-color"] + "33"
+        )}
+
+        /* Text customisations */
         /* Header banner (top section) */
         {self.header(
             header_bg=style_dict["bg-color"],
             text_color=style_dict["text-color"]
-        )}
-
-        /* Input boxes */
-        {self.input_boxes()}
-
-        /* Buttons */
-        {self.buttons()}
-
-        /* Progress bar */
-        {self.progress_bar()}
-
-        /* Slider */
-        {self.slider(
-            slider_btn_bg=style_dict['primary-color'],
-            slider_text_color=style_dict["text-color"]
         )}
 
         /* Header text */
@@ -87,11 +79,19 @@ class Styles:
             collapsed_btn_hover_border=style_dict['border-color']
         )}
 
+        /* Widgets customisations */
         /* Alert box */
         /* {self.alert_box()} */
 
         /* Spinner */
         {self.spinner()}
+
+        /* Dialog */
+        {self.dialog(
+            dialog_bg=style_dict["secondary-bg"],
+            dialog_text=style_dict["text-color"],
+            theme_btn_text=style_dict["text-color"]
+        )}
 
         /* Expander */
         {self.expander(
@@ -102,6 +102,21 @@ class Styles:
             focused_summary_text=style_dict["text-color"],
             hovered_summary_bg=style_dict['title-color'],
             hovered_summary_text=style_dict['bg-color']
+        )}
+
+        /* Input boxes */
+        {self.input_boxes()}
+
+        /* Buttons */
+        {self.buttons()}
+
+        /* Progress bar */
+        {self.progress_bar()}
+
+        /* Slider */
+        {self.slider(
+            slider_btn_bg=style_dict['primary-color'],
+            slider_text_color=style_dict["text-color"]
         )}
 
         /* Other UI elements */
@@ -141,9 +156,9 @@ class Styles:
                 "bg-color": "#e4e5f1",
                 "secondary-bg": "#9394a5",
                 "text-color": "#010101",
-                "primary-color": "#a8e6cf",
+                "third-color": "#a8e6cf",
                 "secondary-color": "#ffd3b6",
-                "third-color": "#ff8b94",
+                "primary-color": "#ff8b94",
                 "low-value-color": "#dd3636",
                 "med-value-color": "#f08022",
                 "high-value-color": "#33c771",
@@ -227,7 +242,7 @@ class Styles:
             main_bg (str): Main container background colour. Default is dark blue (#060621).
         """
         return """
-        body {
+        body, [data-testid="stFullScreenFrame"] {
             background-color: %s !important;  /* Main background */
             color: %s !important;  /* Global text color */
         }
@@ -244,6 +259,16 @@ class Styles:
             body_text,
             p_text,
             main_bg,
+        )
+
+    # Container/column styles
+    def container(self, column_border: str = "#ffffff33") -> str:
+        return """
+        [data-testid="stLayoutWrapper"] > .stHorizontalBlock > .stColumn {
+            border: 1px solid %s !important;  /* Main background */
+        }
+        """ % (
+            column_border
         )
 
     # Header banner styles
@@ -427,6 +452,32 @@ class Styles:
         }
         """ % (
             spinner_text
+        )
+
+    # Dialog styles
+    def dialog(
+        self,
+        dialog_bg: str = "#11523d",
+        dialog_text: str = "#ffffff",
+        theme_btn_text: str = "#000000",
+    ) -> str:
+        return """
+        .stDialog > div > div {
+            background: %s !important;  /* Dialog background */
+        }
+
+        .stDialog > div > div > div {
+            color: %s !important;  /* Dialog text color */
+        }
+
+        [data-testid="edit-theme"] {
+            color: %s !important;  /* Theme edit button text color */
+            pointer-events: None;
+        }
+        """ % (
+            dialog_bg,
+            dialog_text,
+            theme_btn_text,
         )
 
     # Expander styles

@@ -158,7 +158,6 @@ def position_dropdown(
         (str | list | None): Selected player(s) from the dropdown. None if no selection is made.
     """
     positions: list = [
-        "GK",
         "CB",
         "LB",
         "LWB",
@@ -205,7 +204,13 @@ def position_dropdown(
             index=(
                 positions.index(st.session_state.selected_position)
                 if ("selected_position" in st.session_state)
-                else positions.index(default_position)
+                and (st.session_state.selected_position != "GK")
+                else (
+                    0
+                    if ("selected_position" in st.session_state)
+                    and (st.session_state.selected_position == "GK")
+                    else positions.index(default_position)
+                )
             ),
             placeholder="Select a position...",
         )

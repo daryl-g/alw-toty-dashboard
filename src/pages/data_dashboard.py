@@ -95,9 +95,9 @@ with containers[0]:
         <p style='font-size: 1.4rem; color: {palette["title-color"]}'><b>{selected_player}</b></p>
         <p style='font-size: 1.1rem; color: {palette["title-color"]}'><b>{selected_team}</b></p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 1em;' />
-        <p style='font-size: .9rem; color: {palette["title-color"]}'>Compared against players at <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b> with {min_90s} or more 90s.</p>
-        <p style='color: {palette["title-color"]}'>Minutes played: <b>{mins_played} mins</b></p>
-        <p style='color: {palette["title-color"]}'>90s: <b>{played_90s} 90s</b></p>
+        <p style='font-size: .9rem; color: {palette["text-color"]}'>Compared against players at <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b> with {min_90s} or more 90s.</p>
+        <p style='color: {palette["text-color"]}'>Minutes played: <b>{mins_played} mins</b></p>
+        <p style='color: {palette["text-color"]}'>90s: <b>{played_90s} 90s</b></p>
         """
     )
 
@@ -126,8 +126,8 @@ with containers[1]:
                 theta=thetas[:-1],
                 width=bar_width,
                 offset=0,
-                marker_color="#1DB954",
-                marker_line_color="white",
+                marker_color=palette["primary-color"],
+                marker_line_color=palette["border-color"],
                 marker_line_width=1,
                 opacity=0.8,
                 customdata=metrics_groups,
@@ -141,7 +141,7 @@ with containers[1]:
                 theta=thetas[:-1] + bar_width / 2,
                 mode="text",
                 text=metrics_groups,
-                textfont=dict(color="white", size=10),
+                textfont=dict(color=palette["text-color"], size=10),
                 hoverinfo="none",
             )
         )
@@ -208,7 +208,7 @@ with containers[2]:
                     f"{player}: {round(overall_ratings[player], 1)}"
                     for player in overall_ratings
                 ],
-                marker=dict(color=palette["secondary-color"]),
+                marker=dict(color=palette["third-color"]),
                 name="",
                 hovertemplate="%{text}",
             )
@@ -230,8 +230,21 @@ with containers[2]:
         )
 
         fig.update_layout(
-            xaxis=dict(title=dict(text="Overall role rating", font=dict(size=12))),
-            yaxis=dict(range=[-0.2, 0.2], showticklabels=False),
+            xaxis=dict(
+                gridcolor=palette["secondary-bg"],
+                zerolinecolor=palette["secondary-bg"],
+                title=dict(
+                    text="Overall role rating",
+                    font=dict(size=12, color=palette["text-color"]),
+                ),
+                tickfont=dict(color=palette["text-color"]),
+            ),
+            yaxis=dict(
+                gridcolor=palette["secondary-bg"],
+                zerolinecolor=palette["secondary-bg"],
+                range=[-0.2, 0.2],
+                showticklabels=False,
+            ),
             showlegend=False,
             font=dict(family="sans-serif", size=25, color=palette["text-color"]),
             paper_bgcolor=palette["bg-color"],
@@ -312,7 +325,7 @@ with containers[3]:
                     y=data.loc[:, metrics_selection[1]],
                     mode="markers",
                     text=data.loc[:, "Player"],
-                    marker=dict(color=palette["secondary-color"]),
+                    marker=dict(color=palette["third-color"]),
                     name="",
                     hovertemplate="%{text}: (%{x} "
                     + metrics_selection[0].lower()
@@ -380,8 +393,24 @@ with containers[3]:
                     text=data_group,
                     font=dict(family="sans-serif", color=palette["text-color"]),
                 ),
-                xaxis=dict(title=dict(text=metrics_selection[0], font=dict(size=12))),
-                yaxis=dict(title=dict(text=metrics_selection[1], font=dict(size=12))),
+                xaxis=dict(
+                    gridcolor=palette["secondary-bg"],
+                    zerolinecolor=palette["secondary-bg"],
+                    title=dict(
+                        text=metrics_selection[0],
+                        font=dict(size=12, color=palette["text-color"]),
+                    ),
+                    tickfont=dict(color=palette["text-color"]),
+                ),
+                yaxis=dict(
+                    gridcolor=palette["secondary-bg"],
+                    zerolinecolor=palette["secondary-bg"],
+                    title=dict(
+                        text=metrics_selection[1],
+                        font=dict(size=12, color=palette["text-color"]),
+                    ),
+                    tickfont=dict(color=palette["text-color"]),
+                ),
                 showlegend=False,
                 font=dict(family="sans-serif", size=25, color=palette["text-color"]),
                 paper_bgcolor=palette["bg-color"],
@@ -468,7 +497,7 @@ with containers[4]:
                     y=data.loc[:, metrics_selection[1]],
                     mode="markers",
                     text=data.loc[:, "Player"],
-                    marker=dict(color=palette["secondary-color"]),
+                    marker=dict(color=palette["third-color"]),
                     name="",
                     hovertemplate="%{text}: (%{x} "
                     + metrics_selection[0].lower()
@@ -536,8 +565,24 @@ with containers[4]:
                     text=data_group,
                     font=dict(family="sans-serif", color=palette["text-color"]),
                 ),
-                xaxis=dict(title=dict(text=metrics_selection[0], font=dict(size=12))),
-                yaxis=dict(title=dict(text=metrics_selection[1], font=dict(size=12))),
+                xaxis=dict(
+                    gridcolor=palette["secondary-bg"],
+                    zerolinecolor=palette["secondary-bg"],
+                    title=dict(
+                        text=metrics_selection[0],
+                        font=dict(size=12, color=palette["text-color"]),
+                    ),
+                    tickfont=dict(color=palette["text-color"]),
+                ),
+                yaxis=dict(
+                    gridcolor=palette["secondary-bg"],
+                    zerolinecolor=palette["secondary-bg"],
+                    title=dict(
+                        text=metrics_selection[1],
+                        font=dict(size=12, color=palette["text-color"]),
+                    ),
+                    tickfont=dict(color=palette["text-color"]),
+                ),
                 showlegend=False,
                 font=dict(family="sans-serif", size=25, color=palette["text-color"]),
                 paper_bgcolor=palette["bg-color"],
@@ -622,7 +667,7 @@ with containers[5]:
                     y=data.loc[:, metrics_selection[1]],
                     mode="markers",
                     text=data.loc[:, "Player"],
-                    marker=dict(color=palette["secondary-color"]),
+                    marker=dict(color=palette["third-color"]),
                     name="",
                     hovertemplate="%{text}: (%{x} "
                     + metrics_selection[0].lower()
@@ -690,8 +735,24 @@ with containers[5]:
                     text=data_group,
                     font=dict(family="sans-serif", color=palette["text-color"]),
                 ),
-                xaxis=dict(title=dict(text=metrics_selection[0], font=dict(size=12))),
-                yaxis=dict(title=dict(text=metrics_selection[1], font=dict(size=12))),
+                xaxis=dict(
+                    gridcolor=palette["secondary-bg"],
+                    zerolinecolor=palette["secondary-bg"],
+                    title=dict(
+                        text=metrics_selection[0],
+                        font=dict(size=12, color=palette["text-color"]),
+                    ),
+                    tickfont=dict(color=palette["text-color"]),
+                ),
+                yaxis=dict(
+                    gridcolor=palette["secondary-bg"],
+                    zerolinecolor=palette["secondary-bg"],
+                    title=dict(
+                        text=metrics_selection[1],
+                        font=dict(size=12, color=palette["text-color"]),
+                    ),
+                    tickfont=dict(color=palette["text-color"]),
+                ),
                 showlegend=False,
                 font=dict(family="sans-serif", size=25, color=palette["text-color"]),
                 paper_bgcolor=palette["bg-color"],

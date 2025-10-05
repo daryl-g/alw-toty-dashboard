@@ -67,10 +67,10 @@ with col1:
     st.html(
         f"""
         <p style='font-size: 1.5rem; color: {palette["title-color"]}'><b>{player_name}</b> - <b>{selected_team}</b></p>
-        <p style='font-size: .9rem; color: {palette["title-color"]}'>Compared against players at <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b> with {min_90s} or more 90s.</p>
+        <p style='font-size: .9rem; color: {palette["text-color"]}'>Compared against players at <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b> with {min_90s} or more 90s.</p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 1em;' />
-        <p style='color: {palette["title-color"]}'>Minutes played: <b>{mins_played} mins</b></p>
-        <p style='color: {palette["title-color"]}'>90s: <b>{played_90s} 90s</b></p>
+        <p style='color: {palette["text-color"]}'>Minutes played: <b>{mins_played} mins</b></p>
+        <p style='color: {palette["text-color"]}'>90s: <b>{played_90s} 90s</b></p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-top: 1em;'/>
         """
     )
@@ -207,8 +207,8 @@ with col1:
 with col2:
     st.html(
         f"""
-        <p style='color: {palette["title-color"]}'>Similar players to <b>{player_name}</b> (Position: <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b>)</p>
-        <p style='font-size: .9rem; color: {palette["title-color"]}'>(Minimum similarity: {min_similarity}%)</p>
+        <p style='color: {palette["text-color"]}'>Similar players to <b>{player_name}</b> (Position: <b>{"LW and LM" if player_position in ["LW", "LM"] else "RW and RM" if player_position in ["RW", "RM"] else player_position}</b>)</p>
+        <p style='font-size: .9rem; color: {palette["text-color"]}'>(Minimum similarity: {min_similarity}%)</p>
         """
     )
 
@@ -244,9 +244,13 @@ with col2:
         similarity_fig.update_layout(
             xaxis=dict(
                 showgrid=True,
+                gridcolor=palette["line-color"],
                 showline=True,
                 range=[-1, 105],
-                title=dict(text="Similarity Rating (%)"),
+                title=dict(
+                    text="Similarity Rating (%)", font=dict(color=palette["text-color"])
+                ),
+                tickfont=dict(color=palette["text-color"]),
             ),
             yaxis=dict(
                 showgrid=False,
