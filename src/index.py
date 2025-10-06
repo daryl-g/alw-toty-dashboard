@@ -7,9 +7,10 @@ import streamlit as st
 from components import navigation
 
 # Set default theme
-st.session_state.theme = (
-    "dark" if "theme" not in st.session_state else st.session_state.theme
-)
+if "theme" not in st.session_state:
+    st.session_state.theme = (
+        "dark" if "theme" not in st.session_state else st.session_state.theme
+    )
 
 # Setup navigation
 navigation()
