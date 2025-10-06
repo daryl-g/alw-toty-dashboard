@@ -25,6 +25,7 @@ class Styles:
             f"""
         <style>
 
+        /* Layout customisations */
         /* Reduce top padding of the main block */
         {self.main_block()}
         
@@ -36,23 +37,17 @@ class Styles:
             p_text=style_dict["text-color"]
         )}
 
+        /* Container styling */
+        {self.container(
+            column_border=style_dict["border-color"] + "33"
+        )}
+
+        /* Text customisations */
         /* Header banner (top section) */
         {self.header(
             header_bg=style_dict["bg-color"],
             text_color=style_dict["text-color"]
         )}
-
-        /* Input boxes */
-        {self.input_boxes()}
-
-        /* Buttons */
-        {self.buttons()}
-
-        /* Collapsed sidebar button */
-        {self.sidebar_button()}
-
-        /* Progress bar */
-        {self.progress_bar()}
 
         /* Header text */
         {self.header_text(
@@ -74,11 +69,29 @@ class Styles:
             sidebar_link=style_dict["text-color"]
         )}
 
+        /* Collapsed sidebar button */
+        {self.sidebar_button(
+            collapsed_btn_bg=style_dict["bg-color"],
+            collapsed_btn_border=style_dict["border-color"],
+            collapsed_sidebar_btn_bg=style_dict['secondary-bg'],
+            collapsed_sidebar_btn_border=style_dict["border-color"],
+            collapsed_btn_hover=style_dict["primary-color"],
+            collapsed_btn_hover_border=style_dict['border-color']
+        )}
+
+        /* Widgets customisations */
         /* Alert box */
         /* {self.alert_box()} */
 
         /* Spinner */
         {self.spinner()}
+
+        /* Dialog */
+        {self.dialog(
+            dialog_bg=style_dict["secondary-bg"],
+            dialog_text=style_dict["text-color"],
+            theme_btn_text=style_dict["text-color"]
+        )}
 
         /* Expander */
         {self.expander(
@@ -89,6 +102,21 @@ class Styles:
             focused_summary_text=style_dict["text-color"],
             hovered_summary_bg=style_dict['title-color'],
             hovered_summary_text=style_dict['bg-color']
+        )}
+
+        /* Input boxes */
+        {self.input_boxes()}
+
+        /* Buttons */
+        {self.buttons()}
+
+        /* Progress bar */
+        {self.progress_bar()}
+
+        /* Slider */
+        {self.slider(
+            slider_btn_bg=style_dict['primary-color'],
+            slider_text_color=style_dict["text-color"]
         )}
 
         /* Other UI elements */
@@ -128,9 +156,9 @@ class Styles:
                 "bg-color": "#e4e5f1",
                 "secondary-bg": "#9394a5",
                 "text-color": "#010101",
-                "primary-color": "#a8e6cf",
+                "third-color": "#a8e6cf",
                 "secondary-color": "#ffd3b6",
-                "third-color": "#ff8b94",
+                "primary-color": "#ff8b94",
                 "low-value-color": "#dd3636",
                 "med-value-color": "#f08022",
                 "high-value-color": "#33c771",
@@ -214,7 +242,7 @@ class Styles:
             main_bg (str): Main container background colour. Default is dark blue (#060621).
         """
         return """
-        body {
+        body, [data-testid="stFullScreenFrame"] {
             background-color: %s !important;  /* Main background */
             color: %s !important;  /* Global text color */
         }
@@ -231,6 +259,16 @@ class Styles:
             body_text,
             p_text,
             main_bg,
+        )
+
+    # Container/column styles
+    def container(self, column_border: str = "#ffffff33") -> str:
+        return """
+        [data-testid="stLayoutWrapper"] > .stHorizontalBlock > .stColumn {
+            border: 1px solid %s !important;  /* Main background */
+        }
+        """ % (
+            column_border
         )
 
     # Header banner styles
@@ -313,15 +351,25 @@ class Styles:
         self,
         collapsed_btn_bg: str = "#11523d",
         collapsed_btn_border: str = "#11523d",
+        collapsed_sidebar_btn_bg: str = "#11523d",
+        collapsed_sidebar_btn_border: str = "#11523d",
+        collapsed_btn_icon: str = "#ffffff",
         collapsed_btn_hover: str = "#ff8303",
         collapsed_btn_hover_border: str = "#0d3f2f",
     ) -> str:
         return """
-        .stAppViewContainer > div > div > button {
+        .stAppToolbar > div > div > div > button, .stSidebar > div > div > div > button  {
             background-color: %s !important;  /* Sidebar collapsed button background */
             border-color: %s !important;  /* Sidebar collapsed button border color */
         }
-        .stAppViewContainer > div > div > button:hover {
+        .stSidebar > div > div > div > button  {
+            background-color: %s !important;  /* Sidebar collapsed button background */
+            border-color: %s !important;  /* Sidebar collapsed button border color */
+        }
+        .stAppToolbar > div > div > div > button > span > span, .stSidebar > div > div > div > button > span > span {
+            color: %s !important;  /* Sidebar collapsed icon background */
+        }
+        .stAppToolbar > div > div > div > button:hover, .stSidebar > div > div > div > button:hover {
             background-color: %s !important;  /* Sidebar collapsed button hover background */
             border-color: %s !important;  /* Sidebar collapsed button hover border color */ 
         }
@@ -332,6 +380,9 @@ class Styles:
         """ % (
             collapsed_btn_bg,
             collapsed_btn_border,
+            collapsed_sidebar_btn_bg,
+            collapsed_sidebar_btn_border,
+            collapsed_btn_icon,
             collapsed_btn_hover,
             collapsed_btn_hover_border,
         )
@@ -403,7 +454,33 @@ class Styles:
             spinner_text
         )
 
-    # Spinner styles
+    # Dialog styles
+    def dialog(
+        self,
+        dialog_bg: str = "#11523d",
+        dialog_text: str = "#ffffff",
+        theme_btn_text: str = "#000000",
+    ) -> str:
+        return """
+        .stDialog > div > div {
+            background: %s !important;  /* Dialog background */
+        }
+
+        .stDialog > div > div > div {
+            color: %s !important;  /* Dialog text color */
+        }
+
+        [data-testid="edit-theme"] {
+            color: %s !important;  /* Theme edit button text color */
+            pointer-events: None;
+        }
+        """ % (
+            dialog_bg,
+            dialog_text,
+            theme_btn_text,
+        )
+
+    # Expander styles
     def expander(
         self,
         expander_text: str = "#11523d",
@@ -443,6 +520,22 @@ class Styles:
             hovered_summary_text,
         )
 
+    # Slider styles
+    def slider(
+        self, slider_btn_bg: str = "#ffffff", slider_text_color: str = "#ffffff"
+    ) -> str:
+        return """
+        .stSlider > div > div > div > div {
+            background-color: %s !important;  /* Slider button background */
+        }
+        .stSlider > div > div > div > div > div {
+            color: %s !important;  /* Slider indicator background */
+        }
+        """ % (
+            slider_btn_bg,
+            slider_text_color,
+        )
+
     # Other UI elements styles
     def others(
         self,
@@ -462,7 +555,7 @@ class Styles:
             color: %s !important;  /* Nav text color */
         }
 
-        .stDateInput > label, .stButtonGroup > label {
+        .stDateInput > label, .stButtonGroup > label, .stSelectbox > label, .stRadio > label, .stSlider > label, .stRadio > div > label > div {
             color: %s !important;  /* Widgets label color */
         }
 

@@ -1,4 +1,7 @@
-Page description goes here...
+- Position ratings pizza is comprised of core metric groups as displayed on the plot and on the right section.
+- Each core metric group contains key metrics that are on display on the Similar Players page, but with a few unimportant metrics being left out while the remainings ranked based on significance.
+- Metric significance is determined based on Football Manager's attributes rating for each position and the creator's own interpretation.
+- Each player's metric group and overall ratings are calculated and compared against players with the chosen position as their main or secondary position and having played a minimum number of 90s (5 90s for goalkeepers and 8 90s for outfield players).
 
 **Significance range explained**:
 

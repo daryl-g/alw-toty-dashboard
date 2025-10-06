@@ -8,7 +8,13 @@ import plotly.graph_objects as go
 
 # Custom modules
 from styles import Styles
-from components import title_header, team_dropdown, player_dropdown, position_dropdown
+from components import (
+    title_header,
+    team_dropdown,
+    player_dropdown,
+    position_dropdown,
+    Download,
+)
 from services import positional_weighting, role_calculator
 from utils import display_markdown, map_player_positions, get_team_name, plotly_config
 
@@ -68,10 +74,13 @@ col1, col2 = st.columns([3, 2], border=True)
 weightings: dict = positional_weighting(player_position=selected_position)
 
 # Get the role ratings
-role_ratings: dict = role_calculator(
-    selected_player=player_name,
-    selected_position=selected_position,
-)
+if mins_played == 0 or played_90s < min_90s:
+    pass
+else:
+    role_ratings: dict = role_calculator(
+        selected_player=player_name,
+        selected_position=selected_position,
+    )
 
 # Role ratings pizza
 with col1:
@@ -79,10 +88,10 @@ with col1:
     st.html(
         f"""
         <p style='font-size: 1.5rem; color: {palette["title-color"]}'><b>{player_name}</b> - <b>{selected_team}</b></p>
-        <p style='font-size: .9rem;'>Compared against players at <b>{"LW and LM" if selected_position in ["LW", "LM"] else "RW and RM" if selected_position in ["RW", "RM"] else selected_position}</b> with {min_90s} or more 90s.</p>
+        <p style='font-size: .9rem; color: {palette["text-color"]}'>Compared against players at <b>{"LW and LM" if selected_position in ["LW", "LM"] else "RW and RM" if selected_position in ["RW", "RM"] else selected_position}</b> with {min_90s} or more 90s.</p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 1em;' />
-        <p>Minutes played: <b>{mins_played} mins</b></p>
-        <p>90s: <b>{played_90s} 90s</b></p>
+        <p style='color: {palette["text-color"]}'>Minutes played: <b>{mins_played} mins</b></p>
+        <p style='color: {palette["text-color"]}'>90s: <b>{played_90s} 90s</b></p>
         <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-top: 1em;'/>
         """
     )
@@ -101,11 +110,13 @@ with col1:
                 f"""There was an error calculating the role ratings for {player_name} :disappointed:"""
             )
 
+        # Download()
+
         # Display the overall rating
         overall_rating: float = role_ratings["Overall"]
         st.html(
             f"""
-            <p style='font-size: 1.3rem;'><b>Overall rating: {overall_rating:.1f}/100</b></p>
+            <p style='font-size: 1.3rem; text-align: center; color: {palette["title-color"]}'><b>Overall rating: {overall_rating:.1f}/100</b></p>
             """
         )
 
@@ -123,8 +134,8 @@ with col1:
                 theta=thetas[:-1],
                 width=bar_width,
                 offset=0,
-                marker_color="#1DB954",
-                marker_line_color="white",
+                marker_color=palette["primary-color"],
+                marker_line_color=palette["border-color"],
                 marker_line_width=1,
                 opacity=0.8,
                 customdata=metrics_groups,
@@ -138,7 +149,7 @@ with col1:
                 theta=thetas[:-1] + bar_width / 2,
                 mode="text",
                 text=metrics_groups,
-                textfont=dict(color="white", size=15),
+                textfont=dict(color=palette["text-color"], size=15),
                 hoverinfo="none",
             )
         )
@@ -169,7 +180,7 @@ with col1:
             font=dict(family="sans-serif", color=palette["text-color"]),
             paper_bgcolor=palette["bg-color"],
             plot_bgcolor=palette["bg-color"],
-            margin=dict(t=20, b=20, l=0, r=0),
+            margin=dict(t=5, b=20, l=0, r=0),
             height=600,
         )
 
@@ -178,8 +189,8 @@ with col1:
 # Weightings
 with col2:
     st.html(
-        """
-        <p style='font-size: 1.3rem;'><b>Metrics significance</b></p>
+        f"""
+        <p style='font-size: 1.3rem; color: {palette["text-color"]}'><b>Metrics significance</b></p>
         """
     )
 
