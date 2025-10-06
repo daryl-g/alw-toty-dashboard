@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 
 # Custom modules
 from styles import Styles
-from components import title_header, team_dropdown, player_dropdown
+from components import title_header, team_dropdown, player_dropdown, Download
 from services import stats_percentiles, sorted_metrics, player_similarity
 from utils import display_markdown, map_player_positions, get_team_name, plotly_config
 
@@ -19,6 +19,9 @@ from utils import display_markdown, map_player_positions, get_team_name, plotly_
 styles: Styles = Styles()
 styles.set_style(st.session_state.theme)
 palette: dict = styles.get_style(style=st.session_state.theme)
+
+# Initialise Download class
+download: Download = Download(page="Similar Players")
 
 # Get Plotly plot config
 plot_config: dict = plotly_config()
@@ -226,6 +229,14 @@ with col2:
             selected_team=selected_team,
             player_position=player_position,
         ).loc[lambda x: x >= min_similarity]
+
+        download.similarity_bar(
+            similarity_df=similarity,
+            player_name=player_name,
+            selected_team=selected_team,
+            player_position=player_position,
+            min_90s=min_90s,
+        )
 
         similarity_fig = go.Figure()
         similarity_fig.add_trace(
