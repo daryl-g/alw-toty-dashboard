@@ -3,14 +3,14 @@
 # Imports
 import streamlit as st
 
-# Custom modules
-from components import navigation
-
 # Set default theme
 if "theme" not in st.session_state:
     st.session_state.theme = (
         "dark" if "theme" not in st.session_state else st.session_state.theme
     )
+
+# Custom modules
+from components import navigation
 
 # Setup navigation
 navigation()
