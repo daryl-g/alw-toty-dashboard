@@ -1,6 +1,7 @@
 # Percentile calculator
 
 # Imports
+import streamlit as st
 import pandas as pd
 
 # Custom modules
@@ -251,6 +252,7 @@ def percentiles_calculator(
 
 # ----------------------------------------------------------------------------------
 # Sorted metrics
+@st.cache_resource
 def sorted_metrics(data_group: str) -> list:
     """
     Get a list of sorted metrics for display on the Plotly viz.
@@ -372,6 +374,7 @@ def sorted_metrics(data_group: str) -> list:
 
 
 # Weighting
+@st.cache_resource
 def positional_weighting(player_position: str) -> dict:
     """
     Retrieve metric groups weighting for each position.
