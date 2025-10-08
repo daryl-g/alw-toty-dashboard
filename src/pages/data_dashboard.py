@@ -340,43 +340,6 @@ with containers[3]:
                     + ")",
                 )
             )
-            ## Average lines
-            # fig.add_trace(
-            #     go.Scatter(
-            #         x=[
-            #             data.loc[:, metrics_selection[0]].mean()
-            #             for _ in range(len(data))
-            #         ],
-            #         y=[
-            #             (
-            #                 0
-            #                 if data.loc[:, metrics_selection[1]].min() >= 0
-            #                 else data.loc[:, metrics_selection[1]].min() - 0.2
-            #             ),
-            #             data.loc[:, metrics_selection[1]].max() + 0.5,
-            #         ],
-            #         mode="lines",
-            #         line=dict(color=palette["line-color"], dash="dash", width=2),
-            #     )
-            # )
-            # fig.add_trace(
-            #     go.Scatter(
-            #         y=[
-            #             data.loc[:, metrics_selection[1]].mean()
-            #             for _ in range(len(data))
-            #         ],
-            #         x=[
-            #             (
-            #                 0
-            #                 if data.loc[:, metrics_selection[0]].min() >= 0
-            #                 else data.loc[:, metrics_selection[0]].min() - 0.2
-            #             ),
-            #             data.loc[:, metrics_selection[0]].max() + 0.5,
-            #         ],
-            #         mode="lines",
-            #         line=dict(color=palette["line-color"], dash="dash", width=2),
-            #     )
-            # )
 
             fig.update_layout(
                 title=dict(
@@ -512,43 +475,6 @@ with containers[4]:
                     + ")",
                 )
             )
-            ## Average lines
-            # fig.add_trace(
-            #     go.Scatter(
-            #         x=[
-            #             data.loc[:, metrics_selection[0]].mean()
-            #             for _ in range(len(data))
-            #         ],
-            #         y=[
-            #             (
-            #                 0
-            #                 if data.loc[:, metrics_selection[1]].min() >= 0
-            #                 else data.loc[:, metrics_selection[1]].min() - 0.2
-            #             ),
-            #             data.loc[:, metrics_selection[1]].max() + 0.5,
-            #         ],
-            #         mode="lines",
-            #         line=dict(color=palette["line-color"], dash="dash", width=2),
-            #     )
-            # )
-            # fig.add_trace(
-            #     go.Scatter(
-            #         y=[
-            #             data.loc[:, metrics_selection[1]].mean()
-            #             for _ in range(len(data))
-            #         ],
-            #         x=[
-            #             (
-            #                 0
-            #                 if data.loc[:, metrics_selection[0]].min() >= 0
-            #                 else data.loc[:, metrics_selection[0]].min() - 0.2
-            #             ),
-            #             data.loc[:, metrics_selection[0]].max() + 0.5,
-            #         ],
-            #         mode="lines",
-            #         line=dict(color=palette["line-color"], dash="dash", width=2),
-            #     )
-            # )
 
             fig.update_layout(
                 title=dict(
@@ -682,43 +608,6 @@ with containers[5]:
                     + ")",
                 )
             )
-            ## Average lines
-            # fig.add_trace(
-            #     go.Scatter(
-            #         x=[
-            #             data.loc[:, metrics_selection[0]].mean()
-            #             for _ in range(len(data))
-            #         ],
-            #         y=[
-            #             (
-            #                 0
-            #                 if data.loc[:, metrics_selection[1]].min() >= 0
-            #                 else data.loc[:, metrics_selection[1]].min() - 0.2
-            #             ),
-            #             data.loc[:, metrics_selection[1]].max() + 0.5,
-            #         ],
-            #         mode="lines",
-            #         line=dict(color=palette["line-color"], dash="dash", width=2),
-            #     )
-            # )
-            # fig.add_trace(
-            #     go.Scatter(
-            #         y=[
-            #             data.loc[:, metrics_selection[1]].mean()
-            #             for _ in range(len(data))
-            #         ],
-            #         x=[
-            #             (
-            #                 0
-            #                 if data.loc[:, metrics_selection[0]].min() >= 0
-            #                 else data.loc[:, metrics_selection[0]].min() - 0.2
-            #             ),
-            #             data.loc[:, metrics_selection[0]].max() + 0.5,
-            #         ],
-            #         mode="lines",
-            #         line=dict(color=palette["line-color"], dash="dash", width=2),
-            #     )
-            # )
 
             fig.update_layout(
                 title=dict(
@@ -754,14 +643,15 @@ with containers[5]:
             figs[4] = fig
             st.plotly_chart(figs[4], config=plot_config)
 
-download.data_dashboard(
-    minutes_played=mins_played,
-    played_90s=played_90s,
-    role_ratings=role_ratings,
-    overall_ratings=overall_ratings,
-    metrics_selections=attacking_metrics + passing_metrics + defending_metrics,
-    player_name=player_name,
-    selected_team=selected_team,
-    player_position=player_position,
-    min_90s=min_90s,
-)
+if (mins_played > 0) and (played_90s >= min_90s):
+    download.data_dashboard(
+        minutes_played=mins_played,
+        played_90s=played_90s,
+        role_ratings=role_ratings,
+        overall_ratings=overall_ratings,
+        metrics_selections=attacking_metrics + passing_metrics + defending_metrics,
+        player_name=player_name,
+        selected_team=selected_team,
+        player_position=player_position,
+        min_90s=min_90s,
+    )
