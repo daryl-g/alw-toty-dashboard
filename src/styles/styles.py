@@ -13,7 +13,7 @@ class Styles:
 
     @st.cache_resource
     # Return the CSS styles
-    def style_init(self, style_dict: dict):
+    def style_init(_self, style_dict: dict):
         """
         Initialize the CSS styles for the Streamlit app.
 
@@ -28,10 +28,10 @@ class Styles:
 
         /* Layout customisations */
         /* Reduce top padding of the main block */
-        {self.main_block()}
+        {_self.main_block()}
         
         /* Set global background and text color */
-        {self.global_bg_text(
+        {_self.global_bg_text(
             body_bg=style_dict["bg-color"],
             main_bg=style_dict["bg-color"],
             body_text=style_dict["text-color"],
@@ -39,36 +39,36 @@ class Styles:
         )}
 
         /* Container styling */
-        {self.container(
+        {_self.container(
             column_border=style_dict["border-color"] + "33"
         )}
 
         /* Text customisations */
         /* Header banner (top section) */
-        {self.header(
+        {_self.header(
             header_bg=style_dict["bg-color"],
             text_color=style_dict["text-color"]
         )}
 
         /* Header text */
-        {self.header_text(
+        {_self.header_text(
             header_color=style_dict["title-color"]
         )}
 
         /* List items */
-        {self.list_items(
+        {_self.list_items(
             ul_text=style_dict["text-color"]
         )}
 
         /* Sidebar */
-        {self.sidebar(
+        {_self.sidebar(
             sidebar_bg=style_dict["secondary-bg"],
             sidebar_text=style_dict["text-color"],
             sidebar_link=style_dict["text-color"]
         )}
 
         /* Collapsed sidebar button */
-        {self.sidebar_button(
+        {_self.sidebar_button(
             collapsed_btn_bg=style_dict["bg-color"],
             collapsed_btn_border=style_dict["border-color"],
             collapsed_sidebar_btn_bg=style_dict['secondary-bg'],
@@ -80,14 +80,14 @@ class Styles:
         /* Widgets customisations */
 
         /* Dialog */
-        {self.dialog(
+        {_self.dialog(
             dialog_bg=style_dict["secondary-bg"],
             dialog_text=style_dict["text-color"],
             theme_btn_text=style_dict["text-color"]
         )}
 
         /* Expander */
-        {self.expander(
+        {_self.expander(
             expander_text=style_dict["text-color"],
             summary_bg=style_dict['bg-color'],
             summary_border=style_dict["border-color"],
@@ -98,16 +98,16 @@ class Styles:
         )}
 
         /* Buttons */
-        {self.buttons()}
+        {_self.buttons()}
 
         /* Slider */
-        {self.slider(
+        {_self.slider(
             slider_btn_bg=style_dict['primary-color'],
             slider_text_color=style_dict["text-color"]
         )}
 
         /* Other UI elements */
-        {self.others(
+        {_self.others(
             toolbar_bg=style_dict["bg-color"],
             toolbar_text=style_dict["text-color"],
             nav_text=style_dict["text-color"],
@@ -121,7 +121,7 @@ class Styles:
 
     @st.cache_resource
     # Get a dictionary of style elements
-    def get_style(self, style: str) -> dict:
+    def get_style(_self, style: str) -> dict:
         """
         Get palette colours in a dictionary.
 
