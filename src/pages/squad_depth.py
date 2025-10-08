@@ -14,7 +14,13 @@ from matplotlib.axes import Axes
 
 # Custom modules
 from styles import Styles, get_team_colours
-from components import title_header, team_dropdown, get_positions, Download
+from components import (
+    title_header,
+    team_dropdown,
+    get_positions,
+    plot_positions,
+    Download,
+)
 from utils import *
 
 # Get colour palette
@@ -176,7 +182,8 @@ if (data_selection == "Contract expiry") and (sort_by == "Minutes played"):
     )
 
 ## Plot position nodes
-positions: pd.DataFrame = get_positions(_pitch=pitch, _ax=ax, team=selected_team)
+positions: pd.DataFrame = get_positions(_pitch=pitch)
+plot_positions(pitch=pitch, ax=ax, team=selected_team)
 ## Create inset axis for each position
 axes: dict[Axes] = {}
 for position in positions.index:
