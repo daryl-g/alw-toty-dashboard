@@ -59,9 +59,6 @@ class Styles:
             ul_text=style_dict["text-color"]
         )}
 
-        /* Link text */
-        {self.link_text()}
-
         /* Sidebar */
         {self.sidebar(
             sidebar_bg=style_dict["secondary-bg"],
@@ -80,11 +77,6 @@ class Styles:
         )}
 
         /* Widgets customisations */
-        /* Alert box */
-        /* {self.alert_box()} */
-
-        /* Spinner */
-        {self.spinner()}
 
         /* Dialog */
         {self.dialog(
@@ -104,14 +96,8 @@ class Styles:
             hovered_summary_text=style_dict['bg-color']
         )}
 
-        /* Input boxes */
-        {self.input_boxes()}
-
         /* Buttons */
         {self.buttons()}
-
-        /* Progress bar */
-        {self.progress_bar()}
 
         /* Slider */
         {self.slider(
@@ -127,8 +113,6 @@ class Styles:
             widget_label_text=style_dict["text-color"],
             widget_help=style_dict["text-color"]
         )}
-
-        /* Add new styles here as needed */
 
         </style>
         """,
@@ -266,6 +250,7 @@ class Styles:
         return """
         [data-testid="stLayoutWrapper"] > .stHorizontalBlock > .stColumn {
             border: 1px solid %s !important;  /* Main background */
+            border-radius: 0.5rem;
         }
         """ % (
             column_border

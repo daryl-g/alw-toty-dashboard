@@ -171,11 +171,12 @@ with col1:
 
             fig.update_layout(
                 title=dict(
-                    text=(
-                        data_group
-                        if data_group != "Defending"
-                        else "Defending (Possession-adjusted)"
-                    ),
+                    # text=(
+                    #     data_group
+                    #     if data_group != "Defending"
+                    #     else "Defending (Possession-adjusted)"
+                    # ),
+                    text=data_group,
                     font=dict(family="sans-serif", color=palette["text-color"]),
                 ),
                 xaxis=dict(

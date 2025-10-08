@@ -26,6 +26,8 @@ def title_header(
     Returns:
         None: Renders the title header in the Streamlit app.
     """
+    if type(image_path) is not str and image_path is not None:
+        raise TypeError("image_path must be a string or None.")
 
     # Set up page
     st.set_page_config(
@@ -38,7 +40,7 @@ def title_header(
             &emsp; &emsp;
             <h1 style='font-size:2.5em;'>
             {text_1}<br />
-            {text_2 if text_2 != "" or text_2 is not None else ""}
+            {text_2 if text_2 else ""}
             </h1>
         </div>
     """

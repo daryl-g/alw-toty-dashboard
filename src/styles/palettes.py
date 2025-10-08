@@ -3,7 +3,7 @@
 
 def get_team_colours(
     team: str,
-) -> dict | dict[str, str]:
+) -> dict[str, dict[str, str]] | dict[str, str]:
     """
     Get the primary and secondary colours for a given A-League team.
 

@@ -1,5 +1,3 @@
-""" """
-
 # Imports
 import streamlit as st
 import pandas as pd
@@ -8,7 +6,7 @@ import plotly.graph_objects as go
 
 # Custom modules
 from styles import Styles
-from components import title_header, team_dropdown, player_dropdown
+from components import title_header, team_dropdown, player_dropdown, Download
 from services import scatter_data, role_calculator, positional_weighting
 from utils import display_markdown, map_player_positions, get_team_name, plotly_config
 
@@ -16,6 +14,9 @@ from utils import display_markdown, map_player_positions, get_team_name, plotly_
 styles: Styles = Styles()
 styles.set_style(st.session_state.theme)
 palette: dict = styles.get_style(style=st.session_state.theme)
+
+# Initialise the Download class
+download: Download = Download(page="Data Dashboard")
 
 # Get Plotly plot config
 plot_config: dict = plotly_config()
@@ -190,18 +191,10 @@ with containers[2]:
             f"""{player_name} only played {mins_played} minutes last season and did not have enough data for comparison :disappointed:"""
         )
     else:
-        jitter_amount = 1
-        adjusted_x_positions = np.random.uniform(
-            -jitter_amount, jitter_amount, size=len(overall_ratings)
-        )
-
         fig = go.Figure()
         fig.add_trace(
             go.Scatter(
-                x=[
-                    overall_ratings[player] + adjusted_x_positions[i]
-                    for i, player in enumerate(overall_ratings)
-                ],
+                x=list(overall_ratings.values()),
                 y=[0] * len(overall_ratings),
                 mode="markers",
                 text=[
@@ -216,10 +209,7 @@ with containers[2]:
         # Highlight the selected player
         fig.add_trace(
             go.Scatter(
-                x=[
-                    overall_ratings[player] + adjusted_x_positions[i]
-                    for i, player in enumerate(overall_ratings)
-                ],
+                x=[overall_ratings[player_name]],
                 y=[0],
                 mode="markers",
                 marker=dict(color=palette["primary-color"], size=10),
@@ -234,7 +224,7 @@ with containers[2]:
                 gridcolor=palette["secondary-bg"],
                 zerolinecolor=palette["secondary-bg"],
                 title=dict(
-                    text="Overall role rating",
+                    text="Position rating",
                     font=dict(size=12, color=palette["text-color"]),
                 ),
                 tickfont=dict(color=palette["text-color"]),
@@ -273,7 +263,7 @@ with containers[3]:
             horizontal=False, horizontal_alignment="right"
         )
         dropdown_popover = dropdown_container.popover("Select metrics", disabled=False)
-        metrics_selection: list = dropdown_popover.multiselect(
+        attacking_metrics: list = dropdown_popover.multiselect(
             label=(
                 "Attacking metrics" if player_position != "GK" else "Basic GK metrics"
             ),
@@ -304,15 +294,15 @@ with containers[3]:
             max_selections=2,
         )
 
-        if len(metrics_selection) < 2:
+        if len(attacking_metrics) < 2:
             st.error(
-                f"Please choose {2 - len(metrics_selection)} more metrics to create the scatter plot."
+                f"Please choose {2 - len(attacking_metrics)} more metrics to create the scatter plot."
             )
         else:
             # Get data
             data: pd.DataFrame = scatter_data(
                 data_group=data_group,
-                metrics=metrics_selection,
+                metrics=attacking_metrics,
                 player_position=player_position,
                 min_90s=min_90s,
             )
@@ -321,32 +311,32 @@ with containers[3]:
             fig = go.Figure()
             fig.add_trace(
                 go.Scatter(
-                    x=data.loc[:, metrics_selection[0]],
-                    y=data.loc[:, metrics_selection[1]],
+                    x=data.loc[:, attacking_metrics[0]],
+                    y=data.loc[:, attacking_metrics[1]],
                     mode="markers",
                     text=data.loc[:, "Player"],
                     marker=dict(color=palette["third-color"]),
                     name="",
                     hovertemplate="%{text}: (%{x} "
-                    + metrics_selection[0].lower()
+                    + attacking_metrics[0].lower()
                     + ", %{y} "
-                    + metrics_selection[1].lower()
+                    + attacking_metrics[1].lower()
                     + ")",
                 )
             )
             fig.add_trace(
                 go.Scatter(
-                    x=data.loc[data["Player"] == player_name, metrics_selection[0]],
-                    y=data.loc[data["Player"] == player_name, metrics_selection[1]],
+                    x=data.loc[data["Player"] == player_name, attacking_metrics[0]],
+                    y=data.loc[data["Player"] == player_name, attacking_metrics[1]],
                     mode="markers",
                     marker=dict(color=palette["primary-color"], size=10),
                     text=player_name,
                     name="",
                     hovertemplate=player_name
                     + ": (%{x} "
-                    + metrics_selection[0].lower()
+                    + attacking_metrics[0].lower()
                     + ", %{y} "
-                    + metrics_selection[1].lower()
+                    + attacking_metrics[1].lower()
                     + ")",
                 )
             )
@@ -397,7 +387,7 @@ with containers[3]:
                     gridcolor=palette["secondary-bg"],
                     zerolinecolor=palette["secondary-bg"],
                     title=dict(
-                        text=metrics_selection[0],
+                        text=attacking_metrics[0],
                         font=dict(size=12, color=palette["text-color"]),
                     ),
                     tickfont=dict(color=palette["text-color"]),
@@ -406,7 +396,7 @@ with containers[3]:
                     gridcolor=palette["secondary-bg"],
                     zerolinecolor=palette["secondary-bg"],
                     title=dict(
-                        text=metrics_selection[1],
+                        text=attacking_metrics[1],
                         font=dict(size=12, color=palette["text-color"]),
                     ),
                     tickfont=dict(color=palette["text-color"]),
@@ -438,7 +428,7 @@ with containers[4]:
             horizontal=False, horizontal_alignment="right"
         )
         dropdown_popover = dropdown_container.popover("Select metrics", disabled=False)
-        metrics_selection: list = dropdown_popover.multiselect(
+        passing_metrics: list = dropdown_popover.multiselect(
             label=(
                 "Passing metrics" if player_position != "GK" else "Advanced GK metrics"
             ),
@@ -476,15 +466,15 @@ with containers[4]:
             max_selections=2,
         )
 
-        if len(metrics_selection) < 2:
+        if len(passing_metrics) < 2:
             st.error(
-                f"Please choose {2 - len(metrics_selection)} more metrics to create the scatter plot."
+                f"Please choose {2 - len(passing_metrics)} more metrics to create the scatter plot."
             )
         else:
             # Get data
             data: pd.DataFrame = scatter_data(
                 data_group=data_group,
-                metrics=metrics_selection,
+                metrics=passing_metrics,
                 player_position=player_position,
                 min_90s=min_90s,
             )
@@ -493,32 +483,32 @@ with containers[4]:
             fig = go.Figure()
             fig.add_trace(
                 go.Scatter(
-                    x=data.loc[:, metrics_selection[0]],
-                    y=data.loc[:, metrics_selection[1]],
+                    x=data.loc[:, passing_metrics[0]],
+                    y=data.loc[:, passing_metrics[1]],
                     mode="markers",
                     text=data.loc[:, "Player"],
                     marker=dict(color=palette["third-color"]),
                     name="",
                     hovertemplate="%{text}: (%{x} "
-                    + metrics_selection[0].lower()
+                    + passing_metrics[0].lower()
                     + ", %{y} "
-                    + metrics_selection[1].lower()
+                    + passing_metrics[1].lower()
                     + ")",
                 )
             )
             fig.add_trace(
                 go.Scatter(
-                    x=data.loc[data["Player"] == player_name, metrics_selection[0]],
-                    y=data.loc[data["Player"] == player_name, metrics_selection[1]],
+                    x=data.loc[data["Player"] == player_name, passing_metrics[0]],
+                    y=data.loc[data["Player"] == player_name, passing_metrics[1]],
                     mode="markers",
                     marker=dict(color=palette["primary-color"], size=10),
                     text=player_name,
                     name="",
                     hovertemplate=player_name
                     + ": (%{x} "
-                    + metrics_selection[0].lower()
+                    + passing_metrics[0].lower()
                     + ", %{y} "
-                    + metrics_selection[1].lower()
+                    + passing_metrics[1].lower()
                     + ")",
                 )
             )
@@ -569,7 +559,7 @@ with containers[4]:
                     gridcolor=palette["secondary-bg"],
                     zerolinecolor=palette["secondary-bg"],
                     title=dict(
-                        text=metrics_selection[0],
+                        text=passing_metrics[0],
                         font=dict(size=12, color=palette["text-color"]),
                     ),
                     tickfont=dict(color=palette["text-color"]),
@@ -578,7 +568,7 @@ with containers[4]:
                     gridcolor=palette["secondary-bg"],
                     zerolinecolor=palette["secondary-bg"],
                     title=dict(
-                        text=metrics_selection[1],
+                        text=passing_metrics[1],
                         font=dict(size=12, color=palette["text-color"]),
                     ),
                     tickfont=dict(color=palette["text-color"]),
@@ -610,7 +600,7 @@ with containers[5]:
             horizontal=False, horizontal_alignment="right"
         )
         dropdown_popover = dropdown_container.popover("Select metrics", disabled=False)
-        metrics_selection: list = dropdown_popover.multiselect(
+        defending_metrics: list = dropdown_popover.multiselect(
             label=(
                 "Defending metrics"
                 if player_position != "GK"
@@ -646,15 +636,15 @@ with containers[5]:
             max_selections=2,
         )
 
-        if len(metrics_selection) < 2:
+        if len(defending_metrics) < 2:
             st.error(
-                f"Please choose {2 - len(metrics_selection)} more metrics to create the scatter plot."
+                f"Please choose {2 - len(defending_metrics)} more metrics to create the scatter plot."
             )
         else:
             # Get data
             data: pd.DataFrame = scatter_data(
                 data_group=data_group,
-                metrics=metrics_selection,
+                metrics=defending_metrics,
                 player_position=player_position,
                 min_90s=min_90s,
             )
@@ -663,32 +653,32 @@ with containers[5]:
             fig = go.Figure()
             fig.add_trace(
                 go.Scatter(
-                    x=data.loc[:, metrics_selection[0]],
-                    y=data.loc[:, metrics_selection[1]],
+                    x=data.loc[:, defending_metrics[0]],
+                    y=data.loc[:, defending_metrics[1]],
                     mode="markers",
                     text=data.loc[:, "Player"],
                     marker=dict(color=palette["third-color"]),
                     name="",
                     hovertemplate="%{text}: (%{x} "
-                    + metrics_selection[0].lower()
+                    + defending_metrics[0].lower()
                     + ", %{y} "
-                    + metrics_selection[1].lower()
+                    + defending_metrics[1].lower()
                     + ")",
                 )
             )
             fig.add_trace(
                 go.Scatter(
-                    x=data.loc[data["Player"] == player_name, metrics_selection[0]],
-                    y=data.loc[data["Player"] == player_name, metrics_selection[1]],
+                    x=data.loc[data["Player"] == player_name, defending_metrics[0]],
+                    y=data.loc[data["Player"] == player_name, defending_metrics[1]],
                     mode="markers",
                     marker=dict(color=palette["primary-color"], size=10),
                     text=player_name,
                     name="",
                     hovertemplate=player_name
                     + ": (%{x} "
-                    + metrics_selection[0].lower()
+                    + defending_metrics[0].lower()
                     + ", %{y} "
-                    + metrics_selection[1].lower()
+                    + defending_metrics[1].lower()
                     + ")",
                 )
             )
@@ -739,7 +729,7 @@ with containers[5]:
                     gridcolor=palette["secondary-bg"],
                     zerolinecolor=palette["secondary-bg"],
                     title=dict(
-                        text=metrics_selection[0],
+                        text=defending_metrics[0],
                         font=dict(size=12, color=palette["text-color"]),
                     ),
                     tickfont=dict(color=palette["text-color"]),
@@ -748,7 +738,7 @@ with containers[5]:
                     gridcolor=palette["secondary-bg"],
                     zerolinecolor=palette["secondary-bg"],
                     title=dict(
-                        text=metrics_selection[1],
+                        text=defending_metrics[1],
                         font=dict(size=12, color=palette["text-color"]),
                     ),
                     tickfont=dict(color=palette["text-color"]),
@@ -763,3 +753,15 @@ with containers[5]:
 
             figs[4] = fig
             st.plotly_chart(figs[4], config=plot_config)
+
+download.data_dashboard(
+    minutes_played=mins_played,
+    played_90s=played_90s,
+    role_ratings=role_ratings,
+    overall_ratings=overall_ratings,
+    metrics_selections=attacking_metrics + passing_metrics + defending_metrics,
+    player_name=player_name,
+    selected_team=selected_team,
+    player_position=player_position,
+    min_90s=min_90s,
+)
