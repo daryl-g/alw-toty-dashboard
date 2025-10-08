@@ -92,9 +92,9 @@ def percentiles_calculator(
     file_name: str = ""
     file_paths: list[str] = []
     if data_group == "Goalkeeping":
-        file_name = "Goalkeeping.csv"
+        file_name = "Goalkeeping"
     elif data_group == "Advanced GK" or data_group == "Distribution (GK)":
-        file_name = "AdvancedGK.csv"
+        file_name = "AdvancedGK"
     elif data_group == "Shooting":
         file_name = "Shooting"
     # Chance creating (Passing + GCA-SCA)
@@ -116,7 +116,7 @@ def percentiles_calculator(
 
     # Load data
     if player_position == "GK":
-        data: pd.DataFrame = load_csv(file_path + file_name, display=False)
+        data: pd.DataFrame = load_csv(file_name, display=False)
     else:
         if data_group in ["Shooting", "Possession", "Discipline"]:
             data: pd.DataFrame = map_player_positions(file_name)
@@ -138,13 +138,13 @@ def percentiles_calculator(
     metrics: list = sorted_metrics(data_group)
 
     # For possession-adjusted stats
-    if data_group == "Defending":
-        teamPossession: pd.DataFrame = load_csv(
-            "data/TeamPossession.csv", display=False
-        )
+    # if data_group == "Defending":
+    #     teamPossession: pd.DataFrame = load_csv(
+    #         "data/TeamPossession.csv", display=False
+    #     )
 
-        # Calculate opposition's possession time
-        teamPossession["oppPoss"] = 100 - teamPossession["Possession %"]
+    #     # Calculate opposition's possession time
+    #     teamPossession["oppPoss"] = 100 - teamPossession["Possession %"]
 
     # Get raw per 90s stats
     selected_stats: pd.DataFrame = data.loc[

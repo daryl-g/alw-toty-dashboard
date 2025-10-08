@@ -42,6 +42,7 @@ seaborn
 six
 smmap
 streamlit
+st-gsheets-connection
 tenacity
 toml
 tornado
