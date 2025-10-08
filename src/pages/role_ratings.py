@@ -1,5 +1,3 @@
-""" """
-
 # Imports
 import streamlit as st
 import numpy as np
@@ -22,6 +20,9 @@ from utils import display_markdown, map_player_positions, get_team_name, plotly_
 styles: Styles = Styles()
 styles.set_style(st.session_state.theme)
 palette: dict = styles.get_style(style=st.session_state.theme)
+
+# Initialise the Download class
+download: Download = Download(page="Role Ratings")
 
 # Get Plotly plot config
 plot_config: dict = plotly_config()
@@ -110,7 +111,21 @@ with col1:
                 f"""There was an error calculating the role ratings for {player_name} :disappointed:"""
             )
 
-        # Download()
+        download.pizza_baker(
+            role_ratings=role_ratings,
+            player_name=player_name,
+            selected_team=selected_team,
+            player_position=(
+                "LM and LW"
+                if selected_position in ["LM", "LW"]
+                else (
+                    "RM and RW"
+                    if selected_position in ["RM", "RW"]
+                    else selected_position
+                )
+            ),
+            min_90s=min_90s,
+        )
 
         # Display the overall rating
         overall_rating: float = role_ratings["Overall"]
@@ -180,8 +195,8 @@ with col1:
             font=dict(family="sans-serif", color=palette["text-color"]),
             paper_bgcolor=palette["bg-color"],
             plot_bgcolor=palette["bg-color"],
-            margin=dict(t=5, b=20, l=0, r=0),
-            height=600,
+            margin=dict(t=5, b=20, l=10, r=10),
+            height=500,
         )
 
         st.plotly_chart(fig, config=plot_config)
