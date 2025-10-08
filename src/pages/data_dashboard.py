@@ -643,7 +643,15 @@ with containers[5]:
             figs[4] = fig
             st.plotly_chart(figs[4], config=plot_config)
 
-if (mins_played > 0) and (played_90s >= min_90s):
+if (
+    (mins_played > 0)
+    and (played_90s >= min_90s)
+    and (
+        len(attacking_metrics) == 2
+        and len(passing_metrics) == 2
+        and len(defending_metrics) == 2
+    )
+):
     download.data_dashboard(
         minutes_played=mins_played,
         played_90s=played_90s,
