@@ -11,8 +11,8 @@ from utils import get_team_name, import_fonts
 
 @st.cache_resource
 def get_positions(
-    pitch: Pitch | VerticalPitch,
-    ax: Axes,
+    _pitch: Pitch | VerticalPitch,
+    _ax: Axes,
     team: str,
     second_striker: bool = False,
     line: int = 5,
@@ -34,7 +34,7 @@ def get_positions(
     Returns:
         pd.DataFrame: Coordinates of the positions on the pitch, along with position nodes being plotted.
     """
-    temp_pos = pitch.get_positions(second_striker=second_striker, line=line)
+    temp_pos = _pitch.get_positions(second_striker=second_striker, line=line)
 
     loc_list = [
         "GK",
@@ -81,17 +81,17 @@ def get_positions(
             positions.loc[positions.index[i], "y"],
         )
 
-        pitch.scatter(
+        _pitch.scatter(
             positions_coords[0],
             positions_coords[1],
             s=node_size,
             color=colours["primary"],
             edgecolors=colours["secondary"],
             zorder=1,
-            ax=ax,
+            ax=_ax,
         )
 
-        pitch.annotate(
+        _pitch.annotate(
             positions.index[i],
             xy=positions_coords,
             xytext=positions_coords,
@@ -100,7 +100,7 @@ def get_positions(
             fontproperties=import_fonts(weight="bold"),
             fontsize=text_size,
             color=colours["secondary"],
-            ax=ax,
+            ax=_ax,
         )
 
     return positions

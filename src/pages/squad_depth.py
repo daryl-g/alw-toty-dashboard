@@ -176,7 +176,7 @@ if (data_selection == "Contract expiry") and (sort_by == "Minutes played"):
     )
 
 ## Plot position nodes
-positions: pd.DataFrame = get_positions(pitch=pitch, ax=ax, team=selected_team)
+positions: pd.DataFrame = get_positions(_pitch=pitch, _ax=ax, team=selected_team)
 ## Create inset axis for each position
 axes: dict[Axes] = {}
 for position in positions.index:
