@@ -1,6 +1,8 @@
 # Team colours and app colour palettes
+import streamlit as st
 
 
+@st.cache_resource
 def get_team_colours(
     team: str,
 ) -> dict[str, dict[str, str]] | dict[str, str]:

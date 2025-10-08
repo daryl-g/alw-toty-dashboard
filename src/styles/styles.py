@@ -11,6 +11,7 @@ class Styles:
     def __init__(self):
         pass
 
+    @st.cache_resource
     # Return the CSS styles
     def style_init(self, style_dict: dict):
         """
@@ -118,6 +119,7 @@ class Styles:
         """,
         )
 
+    @st.cache_resource
     # Get a dictionary of style elements
     def get_style(self, style: str) -> dict:
         """

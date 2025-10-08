@@ -1,4 +1,5 @@
 # Imports
+import streamlit as st
 from pandas import DataFrame
 from mplsoccer import Pitch, VerticalPitch
 from matplotlib.axes import Axes
@@ -8,6 +9,7 @@ from styles import get_team_colours
 from utils import get_team_name, import_fonts
 
 
+@st.cache_resource
 def get_positions(
     pitch: Pitch | VerticalPitch,
     ax: Axes,
