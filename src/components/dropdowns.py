@@ -71,7 +71,7 @@ def player_dropdown(selected_team: str, multiselect: bool) -> str | list | None:
         (str | list | None): Selected player(s) from the dropdown. None if no selection is made.
     """
 
-    df = load_csv("data/PositionMap.csv", display=False)
+    df = load_csv("PositionMap", display=False)
     df["Main Pos"] = pd.Categorical(
         df["Main Pos"],
         [

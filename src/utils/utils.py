@@ -6,6 +6,14 @@ import streamlit as st
 import matplotlib.font_manager as fm  # Import fonts
 
 from PIL import Image
+from streamlit_gsheets import GSheetsConnection
+
+# Global Google Sheets connection object
+conn = st.connection("gsheets", type=GSheetsConnection, ttl=5 * 60)  # Cache for 5 mins
+## In theory, this is a security nightmare and the link of the spreadsheet mustn't be hardcoded into the code like this.
+## But the data that I'm using are publicly available (from FBRef) so this spreadsheet does not contain anything confidential or secret
+## so I'm fine with having it here.
+spreadsheet_url = "https://docs.google.com/spreadsheets/d/11JBD2qB9xLQW-gP7D57qGNmJp6wj6pxL0QM025nL1fk/edit"
 
 
 def get_team_name(name: str, mode: str = "short") -> str | dict:
@@ -84,7 +92,7 @@ def load_csv(
     Load a CSV file, return its content as a DataFrame, and display on the app.
 
     Args:
-        file_path (str): Path to the CSV file.
+        file_path (str): Name of the worksheet on the Google Sheet file.
         display (bool, optional): Whether to display the DataFrame in the app. Defaults to True.
 
     Returns:
@@ -92,8 +100,31 @@ def load_csv(
             DataFrame containing the CSV file content.
     """
 
+    worksheet_gid: dict = {
+        "AdvancedGK": 804886588,
+        "DefActions": 1509864897,
+        "GCASCA": 1400342110,
+        "Goalkeeping": 755104462,
+        "Misc": 1264383348,
+        "Passing": 70772734,
+        "PassTypes": 901182158,
+        "PlayingTime": 1502378447,
+        "PositionMap": 1341835638,
+        "Possession": 1290408704,
+        "Shooting": 217213328,
+    }
+    if file_path not in list(worksheet_gid.keys()):
+        raise ValueError("Unknown worksheet. Please double check the input.")
+
     # Load the CSV file
-    df = pd.read_csv(file_path, delimiter=",", encoding="utf-8")
+    # df = pd.read_csv(file_path, delimiter=",", encoding="utf-8")
+    with st.spinner("Grabbing data...Remember to hydrate while waiting!"):
+        df = conn.read(
+            spreadsheet=spreadsheet_url,
+            worksheet=worksheet_gid.get(file_path),
+            ttl=5 * 60,
+            folder_id="1hGCExFNPVrxSkQdpPMMXQGZPr3BeocaI",
+        )
 
     # Display the DataFrame in the app
     if display:
@@ -121,6 +152,7 @@ def display_markdown(file_path: str):
     st.markdown(content)
 
 
+@st.cache_resource
 def import_fonts(
     weight: str = "regular",
 ) -> fm.FontProperties | list[fm.FontProperties, fm.FontProperties, fm.FontProperties]:
@@ -157,6 +189,7 @@ def import_fonts(
         )
 
 
+@st.cache_resource
 def load_team_logo(team: str):
     """
     Map team name with the locally-stored team logo.
@@ -202,16 +235,12 @@ def map_player_positions(file_name: str, position_sort: bool = False) -> pd.Data
     Returns:
         (pd.DataFrame): Loaded data with mapped positions.
     """
-    folder_name = "data/"
-    file_extension = ".csv"
+    # folder_name = "data/"
+    # file_extension = ".csv"
 
     # Load the files
-    data_file = load_csv(
-        file_path=folder_name + file_name + file_extension, display=False
-    )
-    position_map = load_csv(
-        file_path=folder_name + "PositionMap" + file_extension, display=False
-    )
+    data_file = load_csv(file_path=file_name, display=False)
+    position_map = load_csv(file_path="PositionMap", display=False)
 
     # Map positions to match data
     position_map.loc[position_map["Main Pos"] == "LW", "Main Pos"] = "LM"
@@ -250,6 +279,7 @@ def map_player_positions(file_name: str, position_sort: bool = False) -> pd.Data
     return joined
 
 
+@st.cache_resource
 def plotly_config() -> dict:
     """
     Just a quick function to get the configurations for the Plotly plot.

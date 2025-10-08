@@ -49,9 +49,9 @@ def scatter_data(
     file_name: str = ""
     file_paths: list[str] = []
     if data_group == "Basic GK":
-        file_name = "Goalkeeping.csv"
+        file_name = "Goalkeeping"
     elif data_group == "Advanced GK" or data_group == "Distributing":
-        file_name = "AdvancedGK.csv"
+        file_name = "AdvancedGK"
     elif data_group == "Attacking":
         file_name = "Shooting"
     elif data_group == "Passing":
@@ -61,7 +61,7 @@ def scatter_data(
 
     # Load data
     if data_group in ["Basic GK", "Advanced GK", "Distributing"]:
-        data: pd.DataFrame = load_csv(file_path + file_name, display=False)
+        data: pd.DataFrame = load_csv(file_name, display=False)
     else:
         if data_group == "Attacking":
             data: pd.DataFrame = map_player_positions(file_name)
@@ -177,7 +177,7 @@ def load_data(
     merge_columns: list = []
     data: pd.DataFrame = pd.DataFrame()
     if player_position == "GK":
-        files = ["Goalkeeping.csv", "AdvancedGK.csv"]
+        files = ["Goalkeeping", "AdvancedGK"]
         merge_columns = ["Player", "Squad", "90s"]
     else:
         files = [
@@ -193,7 +193,7 @@ def load_data(
     for file in files:
         # Load data from file
         if player_position == "GK":
-            from_file = load_csv(file_path + file, display=False)
+            from_file = load_csv(file, display=False)
         else:
             from_file = map_player_positions(file)
         # Merge with main file
