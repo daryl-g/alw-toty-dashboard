@@ -123,8 +123,11 @@ def load_csv(
             spreadsheet=spreadsheet_url,
             worksheet=worksheet_gid.get(file_path),
             ttl=5 * 60,
+            max_entries=5,
             folder_id="1hGCExFNPVrxSkQdpPMMXQGZPr3BeocaI",
         )
+        # Reset connection after successful data retrieval
+        conn.reset()
 
     # Display the DataFrame in the app
     if display:
@@ -147,6 +150,7 @@ def display_markdown(file_path: str):
     # Load the markdown file
     with open(file_path, "r", encoding="utf-8") as file:
         content = file.read()
+        file.close()  # Gracefully close the markdown file
 
     # Display the content in the app
     st.markdown(content)
@@ -221,7 +225,11 @@ def load_team_logo(team: str):
     if team not in team_logo_map.keys():
         team = get_team_name(team, mode="full")
 
-    return Image.open(team_logo_map.get(team, team))
+    with Image.open(team_logo_map.get(team, team)) as img:
+        team_logo = img
+        img.close()  # Gracefully close the image after successfully retrieva,
+
+    return team_logo
 
 
 def map_player_positions(file_name: str, position_sort: bool = False) -> pd.DataFrame:
