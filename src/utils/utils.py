@@ -225,9 +225,9 @@ def load_team_logo(team: str):
     if team not in team_logo_map.keys():
         team = get_team_name(team, mode="full")
 
-    with Image.open(team_logo_map.get(team, team)) as img:
-        team_logo = img
-        img.close()  # Gracefully close the image after successfully retrieva,
+    img = Image.open(team_logo_map.get(team, team))
+    team_logo = img.copy()
+    img.close()
 
     return team_logo
 
